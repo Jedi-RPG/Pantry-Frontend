@@ -8,6 +8,9 @@ Members: Matthew, Dennis, Injo, Haram, Lydia
 -Added toggle option to template
 -Can change user role to Guest , User or Admin
 
+2016-12-07 14:08 - Injo
+-installed caboose and REST and modified autoconfig accordingly
+
 2016-12-07 13:22 - Dennis
 Added database.config to gitignore
 
