@@ -21,6 +21,8 @@
 			<li><a href="/receiving" {rActive}>Receiving</a></li>
 			<li><a href="/production" {pActive}>Production</a></li>
 			<li><a href="/sales" {sActive}>Sales</a></li>
+                        <li><a href="/toggle">Toggle Role</a></li>
+                        <li><center>Role : {userrole}</center></li>
 		</ul>
 	</div>
 	{content}
