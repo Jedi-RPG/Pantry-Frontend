@@ -3,6 +3,9 @@
 ============================================
 Members: Matthew, Dennis, Injo, Haram, Lydia
 
+2016-12-08 00:42 - Dennis
+-Consolidated recipe and product tables, renamed materialcombo table to recipe
+
 2016-12-07 14:37 - Matthew
 -Added toggle Controller
 -Added toggle option to template
