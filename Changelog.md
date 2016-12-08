@@ -28,3 +28,6 @@ Added database.config to gitignore
 2016-12-07 19:44 - Haram
 -Added front-end sql statements for Recipe, product, and materialcombo. Including migration.
 -Added parsedown library because it was required
+-Changed the receiving controller to take in material api and populate the table. (working on test branch)
+-Disabled some features on dashboard to get it working (temporarily)
+-Converted the receiving controller to match the new material model
