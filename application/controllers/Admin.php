@@ -15,10 +15,67 @@ class Admin extends Application
         // This is the view we want shown
         $this->data['pagebody'] = 'admin_list';
 
-        $this->create_form('Materials');
+        // $this->create_form('Materials');
+        $this->create_form_materials();
         $this->create_form('Recipes');
         $this->create_form('Products');
 
+        $this->render();
+    }
+
+    private function create_form_materials(){
+        $this->session->unset_userdata('key');
+        $this->session->unset_userdata('record');
+
+        $this->data['form_open'] = form_open('admin/post', '', array('name' => 'list-form'));
+        $source = $this->Materials->all();
+
+        // Set table headers
+        $items[] = array('Edit Item', 'Delete');
+
+        foreach($source as $record){
+            $chk_data = array('name' => 'c_' . $record->id);
+
+            $items[] = array('<a href="/admin/edit/materials/' .
+                             $record->id . '">' .
+                             $record->name . '</a>',
+                form_checkbox($chk_data, "", "", "class='checkbox'"));
+        }
+
+        //Generate the materials table
+        $this->data['Materials_table'] = $this->table->generate($items);
+
+        //close form
+        $this->data['form_close'] = form_close();       
+    }
+
+    public function edit_materials($id){
+        $this->data['pagebody'] = 'admin_single';
+        $record = $this->Materials->get($id);
+        $record = (array) $record;
+
+        $this->session->set_userdata('key',$id);
+        $this->session->set_userdata('record',$record);
+
+        // Create form for editing an item
+        $this->data['admin_edit_form_open'] = form_open('admin/post', '', array('name' => 'edit-form'));
+        $items[] = array('Property Name', 'Value', 'Update Value');
+
+        foreach (array_keys($record) as $key){
+            if ($key != 'materials' && $key != 'id') {
+                $items[] = array($key,
+                                 $record[$key],
+                                 form_input($this->set_input_params('v', 'input', $id, 'Materials', $record[$key])));
+            } else if ($key == 'materials') {
+                $materials = $record[$key];
+            }
+        }
+
+        $items[] = array(form_reset('', 'Clear', "class='submit'"),
+                         form_submit('', 'Submit', "class='submit'"), '' , '');
+
+        $this->data['admin_main_edit'] = $this->table->generate($items);
+        $this->data['admin_edit_form_close'] = form_close();
         $this->render();
     }
 
@@ -28,7 +85,6 @@ class Admin extends Application
         $this->data['form_open'] = form_open('admin/post', '', array('name' => 'list-form'));
 
         // Get list of items
-
         $source = $this->$type->all();
 
         // Set table headers
@@ -62,6 +118,7 @@ class Admin extends Application
         $this->data['form_close'] = form_close();
 
     }
+
     public function edit_item($type, $id){
         $this->data['pagebody'] = 'admin_single';
         $record = $this->$type->get($id);
@@ -130,7 +187,7 @@ class Admin extends Application
         $this->data['pagebody'] = 'admin_result';
 
         $result = array();
-
+        var_dump($this->input->post());
         if ($_POST['name'] == 'list-form'){
 
             foreach(array_keys($_POST) as $entry)
@@ -149,31 +206,10 @@ class Admin extends Application
                 if ($entry == 'name' || ($entry[0] != 'c' && empty($_POST[$entry])))
                     continue;
 
-                switch($entry[0]) {
-                    case 'n': {
-                        $result[] = array('line' =>
-                            explode("_", $entry)[1] .' id ' . explode("_", $entry)[2] .  '\'s property "'
-                            . explode("_", $entry)[3] . '" will be changed to "' . $_POST[$entry] . '".</br>');
-                        break;
-                    }
-                    case 'v': {
-                        $result[] = array('line' =>
-                            explode("_", $entry)[1] .' id ' . explode("_", $entry)[2] .  '\'s value "'
-                            . explode("_", $entry)[3] . '" will be changed to "' . $_POST[$entry] . '".</br>');
-                        break;
-                    }
-                    case 'c': {
-                        $result[] = array('line' =>
-                            explode("_", $entry)[1] . ' id ' . explode("_", $entry)[2] .
-                            ' property "' . explode("_", $entry)[3] . '" will be deleted. </br>');
-                        break;
-                    }
-                    case 'y': $newname = $_POST[$entry]; break;
-                    case 'z': $newvalue = $_POST[$entry]; break;
-                }
-                if (isset($newname) && isset($newvalue))
-                    $result[] = array('line' => 'Property ' . $newname .
-                        ' with value ' . $newvalue . ' will be created.');
+                $type = explode("_", $entry)[1];
+                $id = explode("_", $entry)[2];
+                $newValue = $_POST[$entry];
+                // $record = $this->Materials->get($id);
             }
         }
         $this->data['admin_results'] = $result;
