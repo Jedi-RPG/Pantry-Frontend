@@ -38,12 +38,12 @@ class Application extends CI_Controller
 		$this->data['pActive'] = $current_page == 'production' ? "class = 'active'" : "";
 		$this->data['sActive'] = $current_page == 'sales' ? "class = 'active'" : "";
 
-                //Role Code
-                $this->data['userrole'] = $this->session->userdata('userrole');
+		//Role Code
+		$this->data['userrole'] = $this->session->userdata('userrole');
+
 		if ($this->data['userrole'] == NULL) {
-                    $this->data['userrole'] = 'Guest';
-                    $this->session->set_userdata('userrole', 'Guest');
-                }
+			$this->data['userrole'] = 'Guest';
+		}
 	}
 
 	/**
