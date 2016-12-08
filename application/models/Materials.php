@@ -1,86 +1,15 @@
 <?php
 
+define('REST_SERVER', 'http://backend.local');  // the REST server host
+define('REST_PORT', $_SERVER['SERVER_PORT']);   // the port you are running the server on
+
 class Materials extends CI_Model {
-
-	var $data = array(
-		array(	'id' => '1', 
-				'name' => 'empty bottle',
-				'price' => 100,
-				'itemPerCase' => 12,
-				'amount'=> 36),
-
-		array(	'id' => '2', 
-				'name' => 'red herb',
-				'price' => 150,
-				'itemPerCase' => 6,
-				'amount'=> 15),
-
-		array(	'id' => '3', 
-				'name' => 'blue herb',
-				'price' => 150,
-				'itemPerCase' => 6,
-				'amount'=> 14),
-
-		array(	'id' => '4', 
-				'name' => 'iron ingot',
-				'price' => 500,
-				'itemPerCase' => 10,
-				'amount'=> 20),
-
-		array(	'id' => '5', 
-				'name' => 'steel ingot',
-				'price' => 500,
-				'itemPerCase' => 10,
-				'amount'=> 18),
-
-		array(	'id' => '6', 
-				'name' => 'leather',
-				'price' => 250,
-				'itemPerCase' => 20,
-				'amount'=> 69),
-
-		array(	'id' => '7', 
-				'name' => 'wood',
-				'price' => 250,
-				'itemPerCase' => 50,
-				'amount'=> 250),
-
-		array(	'id' => '8', 
-				'name' => 'scroll',
-				'price' => 100,
-				'itemPerCase' => 100,
-				'amount'=> 40),
-
-		array(	'id' => '9', 
-				'name' => 'ruby dust',
-				'price' => 1000,
-				'itemPerCase' => 5,
-				'amount'=> 12),
-
-		array(	'id' => '10', 
-				'name' => 'sapphire dust',
-				'price' => 1000,
-				'itemPerCase' => 5,
-				'amount'=> 11),
-
-		array(	'id' => '11', 
-				'name' => 'topaz dust',
-				'price' => 1000,
-				'itemPerCase' => 5,
-				'amount'=> 9),
-
-		array(	'id' => '12', 
-				'name' => 'emerald dust',
-				'price' => 1000,
-				'itemPerCase' => 5,
-				'amount'=> 0)
-
-	);
 
 	// Constructor
 	public function __construct()
 	{
 		parent::__construct();
+		$this->load->library(['curl', 'format', 'rest']);
 	}
 
 	public function getMaterialWithName($name)
@@ -92,19 +21,19 @@ class Materials extends CI_Model {
 		return null;
 	}
 	
-	public function get($which)
+	public function get($key)
 	{
-		// iterate over the data until we find the one we want
-		foreach ($this->data as $record)
-			if ($record['id'] == $which)
-				return $record;
-		return null;
+		$this->rest->initialize(array('server' => REST_SERVER));
+		$this->rest->option(CURLOPT_PORT, REST_PORT);
+		return $this->rest->get('/Material_list/item/id/' . $key);
 	}
 
 	// retrieve all of the quotes
 	public function all()
 	{
-		return $this->data;
+		$this->rest->initialize(array('server' => REST_SERVER));
+		$this->rest->option(CURLOPT_PORT, REST_PORT);
+		return $this->rest->get('/Material_list');
 	}
 
     public function clear() {
