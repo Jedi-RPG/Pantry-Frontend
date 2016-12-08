@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: 127.0.0.1
--- Generation Time: Dec 08, 2016 at 02:56 AM
+-- Generation Time: Dec 08, 2016 at 09:39 AM
 -- Server version: 10.1.19-MariaDB
 -- PHP Version: 5.6.28
 
@@ -17,7 +17,7 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8mb4 */;
 
 --
--- Database: `rpg_frontend`
+-- Database: `rpgfront`
 --
 
 -- --------------------------------------------------------
@@ -25,7 +25,7 @@ SET time_zone = "+00:00";
 --
 -- Table structure for table `ci_sessions`
 --
-
+DROP TABLE IF EXISTS `ci_sessions`;
 CREATE TABLE `ci_sessions` (
   `id` varchar(128) NOT NULL,
   `ip_address` varchar(45) NOT NULL,
@@ -36,10 +36,44 @@ CREATE TABLE `ci_sessions` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `materialcombo`
+-- Table structure for table `product`
+--
+DROP TABLE IF EXISTS `product`;
+CREATE TABLE `product` (
+  `id` int(11) NOT NULL,
+  `name` varchar(32) NOT NULL,
+  `stock` int(11) NOT NULL,
+  `desc` text NOT NULL,
+  `price` decimal(10,2) NOT NULL,
+  `recipeId` int(11) NOT NULL
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
+--
+-- Dumping data for table `product`
 --
 
-CREATE TABLE `materialcombo` (
+INSERT INTO `product` (`id`, `name`, `stock`, `desc`, `price`, `recipeId`) VALUES
+(1, 'health potion', 1, 'Restores 150 Health over 15 seconds', '50.00', 1),
+(2, 'mana potion', 100, 'Restores 150 Mana over 15 seconds', '50.00', 2),
+(3, 'iron sword', 233, '+40 Attack Damage', '1300.00', 3),
+(4, 'iron breastplate', 219, '+40 Armor', '800.00', 4),
+(5, 'iron greaves', 3, 'Enhanced Movement: +25 Movement Speed', '300.00', 5),
+(6, 'steel sword', 99, '+75 Attack Damage', '2800.00', 6),
+(7, 'steel breastplate', 1200, '+100 Armor', '2300.00', 7),
+(8, 'steel greaves', 322, 'Enhacned Movement: +55 Movement Speed', '900.00', 8),
+(9, 'arrow', 19, '+25 Attack Damage', '1000.00', 9),
+(10, 'fire scroll', 80, 'Elemental Enchanting: +5% Fire Damage', '700.00', 10),
+(11, 'water scroll', 500, 'Elemental Enchanting: +5% Water Damage', '700.00', 11),
+(12, 'lightning scroll', 43, 'Elemental Enchanting: +5% Lightning Damage', '700.00', 12),
+(13, 'poison scroll', 1234, 'Elemental Enchanting: +5% Poison Damage', '700.00', 13);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `recipe`
+--
+DROP TABLE IF EXISTS `recipe`;
+CREATE TABLE `recipe` (
   `id` int(11) NOT NULL,
   `MaterialOneId` int(11) NOT NULL,
   `AmountOne` int(11) NOT NULL,
@@ -48,10 +82,10 @@ CREATE TABLE `materialcombo` (
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 --
--- Dumping data for table `materialcombo`
+-- Dumping data for table `recipe`
 --
 
-INSERT INTO `materialcombo` (`id`, `MaterialOneId`, `AmountOne`, `MaterialTwoId`, `AmountTwo`) VALUES
+INSERT INTO `recipe` (`id`, `MaterialOneId`, `AmountOne`, `MaterialTwoId`, `AmountTwo`) VALUES
 (1, 2, 2, 1, 1),
 (2, 3, 3, 1, 1),
 (3, 4, 12, 6, 1),
@@ -66,72 +100,6 @@ INSERT INTO `materialcombo` (`id`, `MaterialOneId`, `AmountOne`, `MaterialTwoId`
 (12, 11, 5, 8, 1),
 (13, 12, 5, 8, 1);
 
--- --------------------------------------------------------
-
---
--- Table structure for table `product`
---
-
-CREATE TABLE `product` (
-  `id` int(11) NOT NULL,
-  `name` varchar(32) NOT NULL,
-  `amount` int(11) NOT NULL,
-  `desc` text NOT NULL,
-  `price` decimal(10,2) NOT NULL
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-
---
--- Dumping data for table `product`
---
-
-INSERT INTO `product` (`id`, `name`, `amount`, `desc`, `price`) VALUES
-(1, 'health potion', 1, 'Restores 150 Health over 15 seconds', '50.00'),
-(2, 'mana potion', 100, 'Restores 150 Mana over 15 seconds', '50.00'),
-(3, 'iron sword', 233, '+40 Attack Damage', '1300.00'),
-(4, 'iron breastplate', 219, '+40 Armor', '800.00'),
-(5, 'iron greaves', 3, 'Enhanced Movement: +25 Movement Speed', '300.00'),
-(6, 'steel sword', 99, '+75 Attack Damage', '2800.00'),
-(7, 'steel breastplate', 1200, '+100 Armor', '2300.00'),
-(8, 'steel greaves', 322, 'Enhacned Movement: +55 Movement Speed', '900.00'),
-(9, 'arrow', 19, '+25 Attack Damage', '1000.00'),
-(10, 'fire scroll', 80, 'Elemental Enchanting: +5% Fire Damage', '700.00'),
-(11, 'water scroll', 500, 'Elemental Enchanting: +5% Water Damage', '700.00'),
-(12, 'lightning scroll', 43, 'Elemental Enchanting: +5% Lightning Damage', '700.00'),
-(13, 'poison scroll', 1234, 'Elemental Enchanting: +5% Poison Damage', '700.00');
-
--- --------------------------------------------------------
-
---
--- Table structure for table `recipes`
---
-
-CREATE TABLE `recipes` (
-  `id` int(11) NOT NULL,
-  `name` varchar(32) NOT NULL,
-  `MaterialComboId` int(11) NOT NULL,
-  `desc` text NOT NULL,
-  `price` decimal(10,2) NOT NULL
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-
---
--- Dumping data for table `recipes`
---
-
-INSERT INTO `recipes` (`id`, `name`, `MaterialComboId`, `desc`, `price`) VALUES
-(1, 'health potion', 1, 'Restores 150 Health over 15 seconds', '50.00'),
-(2, 'mana potion', 2, 'Restores 150 Mana over 15 seconds', '50.00'),
-(3, 'iron sword', 3, '+40 Attack Damage', '1300.00'),
-(4, 'iron breastplate', 4, '+40 Armor', '800.00'),
-(5, 'iron greaves', 5, 'Enhanced Movement: +25 Movement Speed', '300.00'),
-(6, 'steel sword', 6, '+75 Attack Damage', '2800.00'),
-(7, 'steel breastplate', 7, '+100 Armor', '2300.00'),
-(8, 'steel greaves', 8, 'Enhacned Movement: +55 Movement Speed', '900.00'),
-(9, 'arrow', 9, '+25 Attack Damage', '1000.00'),
-(10, 'fire scroll', 10, 'Elemental Enchanting: +5% Fire Damage', '700.00'),
-(11, 'water scroll', 11, 'Elemental Enchanting: +5% Water Damage', '700.00'),
-(12, 'lightning scroll', 12, 'Elemental Enchanting: +5% Lightning Damage', '700.00'),
-(13, 'poison scroll', 13, 'Elemental Enchanting: +5% Poison Damage', '700.00');
-
 --
 -- Indexes for dumped tables
 --
@@ -143,21 +111,15 @@ ALTER TABLE `ci_sessions`
   ADD KEY `ci_sessions_timestamp` (`timestamp`);
 
 --
--- Indexes for table `materialcombo`
---
-ALTER TABLE `materialcombo`
-  ADD PRIMARY KEY (`id`);
-
---
 -- Indexes for table `product`
 --
 ALTER TABLE `product`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indexes for table `recipes`
+-- Indexes for table `recipe`
 --
-ALTER TABLE `recipes`
+ALTER TABLE `recipe`
   ADD PRIMARY KEY (`id`);
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
