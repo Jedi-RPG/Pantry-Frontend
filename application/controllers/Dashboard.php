@@ -17,7 +17,7 @@ class Dashboard extends Application
 
         $this->data['materials_cost'] = $this->calc_value('Materials');
 
-        $this->data['recipes_cost'] = $this->calc_products_cost();
+        //$this->data['recipes_cost'] = $this->calc_products_cost();
 
         $this->data['revenue'] = $this->calc_value('Products');
 
@@ -52,7 +52,7 @@ class Dashboard extends Application
         $sum = 0;
         foreach ($item_list as $record){
             if ($type == 'Materials'){
-                $sum += $record['price'] * $record['amount'] / $record['itemPerCase'];
+                $sum += $record->price * $record->amount / $record->itemPerCase;
             } else {
                 $sum += $record['price'] * $record['amount'];
             }
