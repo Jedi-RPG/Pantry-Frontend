@@ -17,3 +17,7 @@ Added database.config to gitignore
 2016-12-07 13:12 - Lydia
 -Copied assignment 1 into new repository
 -Added changelog
+
+2016-12-07 19:44 - Haram
+-Added front-end sql statements for Recipe, product, and materialcombo. Including migration.
+-Added parsedown library because it was required
