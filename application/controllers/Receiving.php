@@ -34,12 +34,12 @@ class Receiving extends Application
 
         foreach ($source as $record)
         {
-			$text_data = array('name' => $record['id'],'type' => 'number', 'value' => '0');
-			$case = $record['amount'] / $record['itemPerCase'];
+			$text_data = array('name' => $record->id,'type' => 'number', 'value' => '0');
+			$case = $record->amount / $record->itemPerCase;
             $items[] = array ( '<a href="/receiving/get/' .
-                               $record['id']. '">' .
-                               $record['name'] . '</a>',
-               $this->toDollars($record['price']), floor($case) ,form_input($text_data, "", "class='input'"));
+                               $record->id. '">' .
+                               $record->name. '</a>',
+               $this->toDollars($record->price), floor($case) ,form_input($text_data, "", "class='input'"));
         }
 
         $this->data['Materials_table'] = $this->table->generate($items);
@@ -61,12 +61,12 @@ class Receiving extends Application
 		$record = $this->Materials->get($id);
 		
 		$items[] = array('Name','Items Per Case' ,'Total Stocked Items');
-		$items[] = array($record['name'],$record['itemPerCase'] ,$record['amount']);
+		$items[] = array($record->name,$record->itemPerCase ,$record->amount);
 		
 		$this->data['Materials_table'] = $this->table->generate($items);
 		
 		
-		$this->data['itemName'] = ($record['name']);
+		$this->data['itemName'] = ($record->name);
 
 		$this->render();
 	}
