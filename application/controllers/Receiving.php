@@ -73,30 +73,21 @@ class Receiving extends Application
 	
 	public function post()
     {
-		//var_dump($_POST);
-		
 		
 		$this->data['pagebody'] = 'receiving_result';
-		
-		foreach ($_POST as $post_name => $post_value){
-			$this->Transactions->setMaterials($post_name, $post_value);
-			$orders[] = ($post_value);
-		}
-		
 		
 		$empty = "NOTHING WAS RECEIVED!";
 		$empty = "<b>" . $empty . "</b><br>Please try again!";
 	
 		$items[] = array('Ordered Items', '# Ordered Cases');
 		
-		//$source = $this->Materials->all();
 		$i = 1;
 		$j = 1;
-		foreach($orders as $cases)
+		foreach($_POST as $post_id => $cases)
 		{
 			if($cases != "" && $cases != 0){
-				$source = $this->Materials->get($i);
-				$items[] = array($source['name'],$cases);
+				$source = $this->Materials->get($post_id);
+				$items[] = array($source->name,$cases);
 				$j++;
 			}
 			$i++;
