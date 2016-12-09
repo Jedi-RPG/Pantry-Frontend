@@ -52,15 +52,6 @@ class Materials extends CI_Model {
         echo 'materials transactions cleared!';
     }
 
-    // Update a record in the DB
-	// function update($record)
-	// {
-	// 	$this->rest->initialize(array('server' => REST_SERVER));
-	// 	$this->rest->option(CURLOPT_PORT, REST_PORT);
-	// 	return $this->rest->put('/Material_list', $record);
-
-	// }
-
 	// Update a record in the DB
    function update($record)
    {
@@ -68,8 +59,6 @@ class Materials extends CI_Model {
        $this->rest->option(CURLOPT_PORT, REST_PORT);
        return $this->rest->put('/Material_list/item/id/' . $record->id, json_encode($record));
    }
-
-
 
 	// Create a new data object.
 	// Only use this method if intending to create an empty record and then
@@ -97,7 +86,7 @@ class Materials extends CI_Model {
 	{
 		$this->rest->initialize(array('server' => REST_SERVER));
 		$this->rest->option(CURLOPT_PORT, REST_PORT);
-		$retrieved = $this->rest->post('/Material_list/', $record);
+		return $this->rest->post('/Material_list/item/id/' . $record->id, json_encode($record));
 	}
 
 	// Delete a record from the DB
