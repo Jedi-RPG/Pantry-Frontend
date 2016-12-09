@@ -4,7 +4,8 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
 class Sales extends Application
 {
-    	function __construct()
+
+    function __construct()
 	{
 		parent::__construct();
 	}
@@ -16,6 +17,7 @@ class Sales extends Application
 	{
 		// this is the view we want shown
 		$this->data['pagebody'] = 'sale_list';
+        //create table with list of products
 		$this->create_form('Products');
 
 		$this->render();
@@ -36,14 +38,14 @@ class Sales extends Application
         // Add table rows
         foreach ($source as $record)
         {
-            $num_input = array('type' => 'number', 'value' => '0', 'class' => 'num-field', 'name' => $record['id']);
+            $num_input = array('type' => 'number', 'value' => '0', 'class' => 'num-field', 'name' => $record->id);
             
             $items[] = array('<a href="/sales/get/' .
-                              $record['id']. '">' .
-                              $record['name'] . '</a>',
-                              $record['desc'],
-                              $record['amount'],
-                              $this->toDollars($record['price']),
+                              $record->id. '">' .
+                              $record->name . '</a>',
+                              $record->desc,
+                              $record->stock,
+                              $this->toDollars($record->price),
                               form_input($num_input, "", "class='input'"));
         }
 
@@ -63,7 +65,7 @@ class Sales extends Application
         $source = $this->Products->get($id);
 
         $items[] = array('Name', 'Description', 'Price');
-        $items[] = array($source['name'], $source['desc'], $this->toDollars($source['price']));
+        $items[] = array($source->name, $source->desc, $this->toDollars($source->price));
 
         $this->data['stock_table'] = $this->table->generate($items);
 
@@ -84,14 +86,14 @@ class Sales extends Application
             $record = $this->Products->get($source['key']);
 
             if($source['value'] == 1){
-                $result[] = array('line' => "You ordered " . $source['value'] . ' ' .  $record['name'] .
-                    " at " . $this->toDollars($record['price'])  . " per unit." . "</br>");
+                $result[] = array('line' => "You ordered " . $source['value'] . ' ' .  $record->name .
+                    " at " . $this->toDollars($record->price)  . " per unit." . "</br>");
             }else if($source['value'] > 1){
-                $result[] = array('line' => "You ordered " . $source['value'] . ' ' .  $record['name'] .
-                    "s at " . $this->toDollars($record['price'])  . " per unit." . "</br>");
+                $result[] = array('line' => "You ordered " . $source['value'] . ' ' .  $record->name .
+                    "s at " . $this->toDollars($record->price)  . " per unit." . "</br>");
             }
 
-            $sum += $record['price'] * $source['value'];
+            $sum += $record->price * $source['value'];
         }
         $result[] = array('line' => "<br><strong>Grand Total:</strong> " . $this->toDollars($sum));
         $this->data['result'] = $result;
