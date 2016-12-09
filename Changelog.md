@@ -3,6 +3,10 @@
 ============================================
 Members: Matthew, Dennis, Injo, Haram, Lydia
 
+2016-12-08 20:02 - Lydia
+-Edited recipe model and product model
+-Modified recipe controller (need to edit craft method)
+
 2016-12-08 17:28 - Dennis
 -Maintenance controller materials PUT, POST, DELETE complete.
 -Modified Materials model for validation, api requests
@@ -16,6 +20,7 @@ Members: Matthew, Dennis, Injo, Haram, Lydia
 2016-12-08 13:25 - Haram
 -Changed the receiving controller to take in material api and populate the table.
 -Disabled some features on dashboard to get it working (temporarily)
+
 
 2016-12-08 12:55 - Dennis
 - Maintenance controller materials read complete
@@ -42,5 +47,3 @@ Added database.config to gitignore
 2016-12-07 13:12 - Lydia
 -Copied assignment 1 into new repository
 -Added changelog
-
-

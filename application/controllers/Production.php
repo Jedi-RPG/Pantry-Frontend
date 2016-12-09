@@ -18,8 +18,8 @@ class Production extends Application
 		// this is the view we want shown
 		$this->data['pagebody'] = 'production_list';
                 
-                //create table with list of recipes
-                $this->createRecipeListTable('Recipes');
+        //create table with list of recipes
+        $this->createRecipeListTable('Products');
 
 		$this->render();
 	}
@@ -31,7 +31,7 @@ class Production extends Application
             $this->data['pagebody'] = 'production_single';
             
             $materials = array();
-            $record = $this->Recipes->get($id);
+            $record = $this->Products->get($id);
             
             //Makes table with materials name, amount needed and amount in stock
             $this->createSingleRecipeTable($id);
@@ -40,7 +40,7 @@ class Production extends Application
             $inputForm = array('type' => 'number', 'value' => '1', 'class' => 'num-field', 'name' => 'amountToCraft');
             $formHidden = array('recipeId' => $id);
             
-            $this->data['itemName'] = $record['name'];
+            $this->data['itemName'] = $record->name;
             
             //form related vars
             $this->data['form_open'] = form_open('production/craft', '', $formHidden);
@@ -75,36 +75,43 @@ class Production extends Application
             $numberCrafted = 0;
             
             $record = $this->Recipes->get($recipeId);
+            $record_product = $this->Products->get($recipeId);
             $tempStocks = array();
-                
-            //Checks how many items you can craft based on stock
-            foreach ($record['materials'] as $material)
-            {
-                $stock = $this->Materials->getMaterialWithName($material['name']);
-                $temp = floor($stock['amount'] / $material['amount']);
 
-                if($numberCrafted == 0) {
-                    $numberCrafted = $temp;
-                }elseif($temp < $numberCrafted){
-                    $numberCrafted = $temp;
-                }
+            // Get materials by $id
+            $source_materialOne = $this->Materials->get($record->MaterialOneId);
+            $source_materialTwo = $this->Materials->get($record->MaterialTwoId);
+            
+            $stockOne = $source_materialOne->amount;
+            $stockTwo = $source_materialTwo->amount;
+
+            //Checks how many items you can craft based on stock
+            $tempOne = floor($stockOne / $record->AmountOne);
+            $tempTwo = floor($stockTwo / $record->AmountTwo);
+
+            if($tempOne < $tempTwo) {
+                    $numberCrafted = $tempOne;
+            }else{
+                    $numberCrafted = $tempTwo;
             }
             
             //sets amount to craft and display on result
             if($numberCrafted > $amountToCraft) {
                 $numberCrafted = $amountToCraft;    
+            }else{
+                $numberCrafted = 0;
             }
             
             //Displays message depending on result and sets logging
             if($numberCrafted == 0) {
-                $result = "Unable to craft " . $record['name'] . ", not enough materials.";                    
+                $result = "Unable to craft " . $record_product->name . ", not enough materials.";                    
             }else{
-                foreach ($record['materials'] as $material)
-                {
-                   $temp = $this->Materials->getMaterialWithName($material['name']);
-                   $this->Transactions->setRecipes($temp['id'], (Int)($material['amount'] * $numberCrafted));
-                }
-                $result = "Crafted " . $numberCrafted . " " . $record['name'] . ".<br>";
+                //foreach ($record['materials'] as $material)
+                //{
+                //   $temp = $this->Materials->getMaterialWithName($material['name']);
+                //   $this->Transactions->setRecipes($temp['id'], (Int)($material['amount'] * $numberCrafted));
+                //}
+                $result = "Crafted " . $numberCrafted . " " . $record_product->name . ".<br>";
             }
             
             $this->data['craftingResult'] = $result;
@@ -131,14 +138,14 @@ class Production extends Application
             foreach ($source as $record)
             {
                 $items[] = array('<a href="/production/get/' .
-                                  $record['id']. '">' .
-                                  $record['name'] . '</a>',
-                                  $record['desc']
+                                  $record->id. '">' .
+                                  $record->name . '</a>',
+                                  $record->desc
                                   );
             }
 
             //Generate the materials table
-            $this->data[$type.'_table'] = $this->table->generate($items);
+            $this->data['Recipes_table'] = $this->table->generate($items);
         }
         
         /*
@@ -150,22 +157,36 @@ class Production extends Application
             // Get recipe with $id
             $source = $this->Recipes->get($id);
 
+            // Get materials by $id
+            $source_materialOne = $this->Materials->get($source->MaterialOneId);
+            $source_materialTwo = $this->Materials->get($source->MaterialTwoId);
+
             // Set table headers
             $items[] = array('Material Name', 'Material Needed', 'Material in Stock');
             
             // fill up table
-            foreach ($source['materials'] as $material)
-            {
-                $stock = $this->Materials->getMaterialWithName($material['name']);
-                
-                if($stock['amount'] < $material['amount']) {
-                    $items[] = array ('name' => $material['name'], 
-                                      'amount' => $material['amount'], 
-                                      'inStock' => "<font color = 'red'>" . $stock['amount'] . "</font>");
-                }else{
-                    $items[] = array ('name' => $material['name'], 'amount' => $material['amount'], 'inStock' => $stock['amount']);
-                }
+            $stockOne = $source_materialOne->amount;
+            $stockTwo = $source_materialTwo->amount;
+
+            if($stockOne < $source->AmountOne) {
+                $items[] = array ('name' => $source_materialOne->name, 
+                                  'amount' => $source->AmountOne, 
+                                  'inStock' => "<font color = 'red'>" . $stockOne . "</font>");
+            }else{
+                $items[] = array ('name' => $source_materialOne->name, 
+                                  'amount' => $source->AmountOne, 
+                                  'inStock' => $stockOne);
             }
+
+            if($stockTwo < $source->AmountTwo) {
+                $items[] = array ('name' => $source_materialTwo->name, 
+                                  'amount' => $source->AmountTwo, 
+                                  'inStock' => "<font color = 'red'>" . $stockTwo . "</font>");
+            }else{
+                $items[] = array ('name' => $source_materialTwo->name, 
+                                  'amount' => $source->AmountTwo, 
+                                  'inStock' => $stockTwo);
+            }  
 
             //Generate the materials table
             $this->data['recipeMaterialTable'] = $this->table->generate($items);
