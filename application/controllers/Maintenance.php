@@ -2,7 +2,7 @@
 
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-class Admin extends Application
+class Maintenance extends Application
 {
 
     function __construct()
@@ -20,27 +20,32 @@ class Admin extends Application
         $this->create_form('Recipes');
         $this->create_form('Products');
 
+        $this->error_messages = array();
+
         $this->render();
     }
 
     private function create_form_materials(){
-        $this->session->unset_userdata('key');
         $this->session->unset_userdata('record');
 
-        $this->data['form_open'] = form_open('admin/post', '', array('name' => 'list-form'));
+        // $this->data['form_open'] = form_open('maintenance/delete_material', '', array('name' => 'list-form'));
         $source = $this->Materials->all();
 
         // Set table headers
         $items[] = array('Edit Item', 'Delete');
 
         foreach($source as $record){
-            $chk_data = array('name' => 'c_' . $record->id);
 
-            $items[] = array('<a href="/admin/edit/materials/' .
+            $items[] = array('<a href="/maintenance/edit/materials/' .
                              $record->id . '">' .
-                             $record->name . '</a>',
-                form_checkbox($chk_data, "", "", "class='checkbox'"));
+                             $record->name . '</a>');
         }
+
+
+        // Add new items
+        $items[] = array('');
+        $items[] = array('<a href="/maintenance/add_material/" role="button" class="Submit">Create new material</a>',
+            '', '');
 
         //Generate the materials table
         $this->data['Materials_table'] = $this->table->generate($items);
@@ -51,38 +56,57 @@ class Admin extends Application
 
     public function edit_materials($id){
         $this->data['pagebody'] = 'admin_single';
-        $record = $this->Materials->get($id);
-        $record = (array) $record;
-
-        $this->session->set_userdata('key',$id);
-        $this->session->set_userdata('record',$record);
+        
+        if($id != 0) {
+            // for PUT
+            $record = $this->Materials->get($id);
+            $this->session->set_userdata('post', false); 
+        } else {
+            // for POST
+            $record = $this->session->userdata('record');
+            $this->session->set_userdata('post', true); 
+        }
+        
+        // $record = (array) $record;
+        $this->session->set_userdata('record',$record); 
+        
 
         // Create form for editing an item
-        $this->data['admin_edit_form_open'] = form_open('admin/post', '', array('name' => 'edit-form'));
-        $items[] = array('Property Name', 'Value', 'Update Value');
+        $this->data['admin_edit_form_open'] = form_open('maintenance/post', '', array('name' => 'edit-form'));
+        $items[] = array('Property Name', 'Value');
 
-        foreach (array_keys($record) as $key){
-            if ($key != 'materials' && $key != 'id') {
-                $items[] = array($key,
-                                 $record[$key],
-                                 form_input($this->set_input_params('v', 'input', $id, 'Materials', $record[$key])));
-            } else if ($key == 'materials') {
-                $materials = $record[$key];
-            }
+        foreach (get_object_vars($record) as $key => $value){   
+                $items[] = array($key, form_input($key, $record->$key));
+            
         }
 
-        $items[] = array(form_reset('', 'Clear', "class='submit'"),
-                         form_submit('', 'Submit', "class='submit'"), '' , '');
+        if ($id != 0) {
+            $items[] = array('<a href="/maintenance/delete_material/' . $id .'" role="button" class="Submit">Delete</a>',
+                             form_submit('', 'Submit', "class='submit'"), 
+                             '' ,
+                              '');
+        } else {
+            $items[] = array(form_reset('', 'Clear', "class='submit'"),
+                             form_submit('', 'Submit', "class='submit'"), 
+                             '','');
+        }
 
         $this->data['admin_main_edit'] = $this->table->generate($items);
         $this->data['admin_edit_form_close'] = form_close();
+
+        $this->show_any_errors();
         $this->render();
     }
 
-    private function create_form($type) {
+    public function add_material() {
+         $record = $this->Materials->create();
+         $this->session->set_userdata('record', $record);
+         $this->edit_materials(0);
+    }
 
+    private function create_form($type) {
         //Open form
-        $this->data['form_open'] = form_open('admin/post', '', array('name' => 'list-form'));
+        $this->data['form_open'] = form_open('maintenance/post', '', array('name' => 'list-form'));
 
         // Get list of items
         $source = $this->$type->all();
@@ -95,7 +119,7 @@ class Admin extends Application
         {
             $chk_data = array('name' => 'c_' . $record['id']);
 
-            $items[] = array('<a href="/admin/edit/' .
+            $items[] = array('<a href="/maintenance/edit/' .
                              strtolower($type) . '/' .
                              $record['id']. '">' .
                              $record['name'] . '</a>',
@@ -124,7 +148,7 @@ class Admin extends Application
         $record = $this->$type->get($id);
 
         // Create form for editing an item
-        $this->data['admin_edit_form_open'] = form_open('admin/post', '', array('name' => 'edit-form'));
+        $this->data['admin_edit_form_open'] = form_open('maintenance/post', '', array('name' => 'edit-form'));
         $items[] = array('Property Name', 'Value', 'Update Name', 'Update Value', 'Delete');
 
         foreach (array_keys($record) as $key){
@@ -181,41 +205,60 @@ class Admin extends Application
         );
     }
 
-    public function post()
-    {
+    public function post() {
 
-        $this->data['pagebody'] = 'admin_result';
+        $record = $this->session->userdata('record');
+        $incoming = $this->input->post();
+        $posting = $this->session->userdata('post');
 
-        $result = array();
-        var_dump($this->input->post());
-        if ($_POST['name'] == 'list-form'){
-
-            foreach(array_keys($_POST) as $entry)
-            {
-                if ($entry[0] == 'c') {
-                    //array_push($checked, $entry);
-                    $result[] = array('line' => 'Id ' . substr($entry,2) . ' will be deleted </br>');
-                } else if ($entry[0] == 'a' && !empty($_POST[$entry])) {
-                    $result[] = array('line' => 'New item ' . $_POST[$entry] . ' will be created');
-                }
-            }
-        } else {
-
-            foreach(array_keys($_POST) as $entry)
-            {
-                if ($entry == 'name' || ($entry[0] != 'c' && empty($_POST[$entry])))
-                    continue;
-
-                $type = explode("_", $entry)[1];
-                $id = explode("_", $entry)[2];
-                $newValue = $_POST[$entry];
-                // $record = $this->Materials->get($id);
-            }
+        foreach(array_keys($incoming) as $entry) {
+            $record->$entry = $incoming[$entry];
         }
-        $this->data['admin_results'] = $result;
+        
+        //validate
+        $this->load->library('form_validation');
+        $this->form_validation->set_rules($this->Materials->rules());
+        if ($this->form_validation->run() != TRUE)
+            $this->error_messages = $this->form_validation->error_array(); 
 
-        $this->render();
+        if ($posting)
+                if ($this->Materials->exists($record->id))
+                        $this->error_messages[] = 'Duplicate key adding new material item';
 
+        //save or not
+        if (! empty($this->error_messages)) {
+            $this->edit_materials(0);
+            return;
+        }
+
+        if ($posting)
+            $res = $this->Materials->add($record);
+        else
+            $res = $this->Materials->update($record);
+
+        // $this->data['admin_results'] = $res[0];
+        // $this->render();
+        $this->index();
+    }
+
+    function show_any_errors() {
+        $result = '';
+        if (empty($this->error_messages)) {
+            $this->data['error_messages'] = '';
+            return;
+        }
+        // add the error messages to a single string with breaks
+        foreach($this->error_messages as $onemessage)
+            $result .= $onemessage . '<br/>';
+        // and wrap these per our view fragment
+        $this->data['error_messages'] = $this->parser->parse('admin_errors',['error_messages' => $result], true);
+    }
+
+    function delete_material($id) {
+
+        $this->Materials->delete($id);
+
+        $this->index();
     }
 
 }

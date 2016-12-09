@@ -5,8 +5,6 @@
 
     <div id="body">
         {admin_results}
-            {line}
-        {/admin_results}
         <hr>
         {previous}
     </div>
