@@ -88,6 +88,10 @@ class Receiving extends Application
 			if($cases != "" && $cases != 0){
 				$source = $this->Materials->get($post_id);
 				$items[] = array($source->name,$cases);
+
+				$source->amount += $source->itemPerCase * $cases;
+				$this->Materials->update($source);
+
 				$j++;
 			}
 			$i++;
