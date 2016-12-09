@@ -3,6 +3,9 @@
 ============================================
 Members: Matthew, Dennis, Injo, Haram, Lydia
 
+2016-12-08 20:59 - Lydia
+- Modified sales controller to show product list and single product
+
 2016-12-08 20:02 - Lydia
 - Edited recipe model and product model
 - Modified recipe controller (need to edit craft method)
