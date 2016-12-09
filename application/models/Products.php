@@ -27,7 +27,7 @@ class Products extends CI_Model {
 	public function get($id)
 	{
 		$query = $this->db->get_where('product', array('id' => $id));
-		$result = $query->row_array();
+		$result = $query->row();
 		return $result;
 	}
 
@@ -35,7 +35,7 @@ class Products extends CI_Model {
 	public function all()
 	{
 		$query = $this->db->get('product');
-		return $result = $query->result_array();
+		return $result = $query->result();
 	}
 
 
