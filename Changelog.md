@@ -3,6 +3,11 @@
 ============================================
 Members: Matthew, Dennis, Injo, Haram, Lydia
 
+2016-12-08 17:28 - Dennis
+-Maintenance controller materials PUT, POST, DELETE complete.
+-Modified Materials model for validation, api requests
+-Renamed Admin routes to Maintenance 
+
 2016-12-08 12:55 - Dennis
 - Maintenance controller materials read complete
 
