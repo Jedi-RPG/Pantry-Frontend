@@ -31,3 +31,5 @@ Added database.config to gitignore
 -Changed the receiving controller to take in material api and populate the table. (working on test branch)
 -Disabled some features on dashboard to get it working (temporarily)
 -Converted the receiving controller to match the new material model
+-Implemented the update feature in receiving controller to update the amount of materials by user input.
+-changed the material model accordingly.

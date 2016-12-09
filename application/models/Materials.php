@@ -41,4 +41,19 @@ class Materials extends CI_Model {
         echo 'materials transactions cleared!';
     }
 
+	// Update a record in the DB
+    function update($record)
+    {
+        $this->rest->initialize(array('server' => REST_SERVER));
+        $this->rest->option(CURLOPT_PORT, REST_PORT);
+        return $this->rest->put('/Material_list/item/id/' . $record->id, json_encode($record));
+    }
+
+	// Add a record to the DB
+	function add($record)
+	{
+		$this->rest->initialize(array('server' => REST_SERVER));
+		$this->rest->option(CURLOPT_PORT, REST_PORT);
+		return $this->rest->post('/Material_list/item/id/' . $record->id, json_encode($record));
+	}
 }
