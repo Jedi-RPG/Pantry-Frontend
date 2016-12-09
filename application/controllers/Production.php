@@ -18,8 +18,8 @@ class Production extends Application
 		// this is the view we want shown
 		$this->data['pagebody'] = 'production_list';
                 
-                //create table with list of recipes
-                $this->createRecipeListTable('Recipes');
+        //create table with list of recipes
+        $this->createRecipeListTable('Recipes');
 
 		$this->render();
 	}
