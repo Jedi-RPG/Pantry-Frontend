@@ -3,6 +3,10 @@
 ============================================
 Members: Matthew, Dennis, Injo, Haram, Lydia
 
+2016-12-10 11:37 - Injo
+- Updated Sales Controller
+- updating to db still on the work
+
 2016-12-09 22:57 - Injo
 - minor changes from production controller
 
