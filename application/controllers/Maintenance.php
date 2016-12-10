@@ -17,18 +17,20 @@ class Maintenance extends Application
 
         // $this->create_form('Materials');
         $this->create_form_materials();
-        $this->create_form_recipes();
-        // $this->create_form('Recipes');
-        // $this->create_form('Products');
+        // $this->create_form_recipes();
+        $this->create_form('Recipes');
+        $this->create_form('Products');
 
         $this->error_messages = array();
+
+        $this->session->unset_userdata('record');
+        $this->session->unset_userdata('post');
+        $this->session->unset_userdata('type');
 
         $this->render();
     }
 
     private function create_form_materials(){
-        $this->session->unset_userdata('record');
-
         $source = $this->Materials->all();
 
         // Set table headers
@@ -107,51 +109,56 @@ class Maintenance extends Application
         $this->index();
     }
 
-    private function create_form_recipes(){
+    private function create_form($type) {
 
-        // Get list of recipes
-        $recipes = $this->Recipes->all();
+        // Get list of items
+        $records = $this->$type->all();
 
 
         // Set table headers
         $items[] = array('Edit Item');
 
         // Add table rows
-        foreach ($recipes as $record)
+        foreach ($records as $record)
         {
             
-
-            $items[] = array('<a href="/maintenance/edit/recipes' . '/' .
-                             $record->id. '">' .
-                             $this->getProductName($record) . '</a>',
-                );
+            if ($type == "Recipes"){
+                $items[] = array('<a href="/maintenance/edit/recipes' . '/' .
+                                 $record->id. '">' .
+                                 $this->getProductName($record) . '</a>');
+            } else {
+                $items[] = array('<a href="/maintenance/edit/products' . '/' .
+                                 $record->id. '">' .
+                                 $record->name . '</a>');
+            }
         }
 
         // Add new items
         $items[] = array('');
-        $items[] = array('<a href="/maintenance/add_recipe/" role="button" class="Submit">Create new recipe</a>',
+        $items[] = array('<a href="/maintenance/add/' . $type . '" role="button" class="Submit">Create new '. lcfirst($type) .'</a>',
             '', '');
 
         //Generate the recipes table
-        $this->data['Recipes_table'] = $this->table->generate($items);
+        $this->data[$type . '_table'] = $this->table->generate($items);
     }
 
-   public function add_recipe() {
-         $record = $this->Recipes->create();
+   public function add($type) {
+         $record = $this->$type->create();
          $this->session->set_userdata('record', $record);
-         $this->edit_recipes(0);
+         $this->edit(ucfirst($type), 0);
     }
 
-    public function edit_recipes($id) {
+    public function edit($type, $id) {
         $this->data['pagebody'] = 'admin_single';
 
-        $products = $this->Materials->all();
-        $products = $this->create_dropdown_array($products);
-
+        if ($type == "recipes"){
+            $products = $this->Materials->all();
+            $products = $this->create_dropdown_array($products);
+        }
 
         if($id != 0) {
             // for update
-            $record = $this->Recipes->get($id);
+            $record = $type == "recipes" ? $this->Recipes->get($id) : $this->Products->get($id);
             $this->session->set_userdata('post', false); 
         } else {
             // for create
@@ -159,14 +166,15 @@ class Maintenance extends Application
             $this->session->set_userdata('post', true); 
         }
         $this->session->set_userdata('record',$record); 
+        $this->session->set_userdata('type',$type); 
         
 
         // Create form for editing an item
-        $this->data['admin_edit_form_open'] = form_open('maintenance/post_recipes', '', '');
+        $this->data['admin_edit_form_open'] = form_open('maintenance/post_', '', '');
         $items[] = array('Property Name', 'Value');
 
         foreach (get_object_vars($record) as $key => $value){   
-            if (strpos($key, 'Material') !== false){
+            if (strpos($key, 'Material') !== false && $type == "recipes"){
                 $items[] = array($key, form_dropdown($key, $products, $record->$key));
             } else {
                 $items[] = array($key, form_input($key, $record->$key));
@@ -174,7 +182,7 @@ class Maintenance extends Application
         }
 
         if ($id != 0) {
-            $items[] = array('<a href="/maintenance/delete_recipe/' . $id .'" role="button" class="Submit">Delete</a>',
+            $items[] = array('<a href="/maintenance/delete/' . $type . "/" . $id .'" role="button" class="Submit">Delete</a>',
                              form_submit('', 'Submit', "class='submit'"), 
                              '' ,
                               '');
@@ -191,8 +199,9 @@ class Maintenance extends Application
         $this->render();
     }
 
-   public function delete_recipe($id) {
-        $this->Recipes->delete($id);
+   public function delete($type, $id) {
+        $type = ucfirst($type);
+        $this->$type->delete($id);
 
         $this->index();
     }
@@ -205,99 +214,6 @@ class Maintenance extends Application
         return $arr;
     }
 
-    private function create_form($type) {
-        //Open form
-        $this->data['form_open'] = form_open('maintenance/post', '', array('name' => 'list-form'));
-
-        // Get list of items
-        $source = $this->$type->all();
-
-        // Set table headers
-        $items[] = array('Edit Item', 'Delete');
-
-        // Add table rows
-        foreach ($source as $record)
-        {
-            $chk_data = array('name' => 'c_' . $record['id']);
-
-            $items[] = array('<a href="/maintenance/edit/' .
-                             strtolower($type) . '/' .
-                             $record['id']. '">' .
-                             $record['name'] . '</a>',
-                form_checkbox($chk_data, "", "", "class='checkbox'"));
-
-        }
-
-        // Add new items
-        $items[] = array('');
-        $items[] = array('Add New Item', '', '');
-        $new_data = array('name' => 'a_');
-        $items[] = array(form_input('a_', "", "class='input'"),
-            '', form_submit('', 'Submit', "class='submit'"));
-        
-
-        //Generate the materials table
-        $this->data[$type.'_table'] = $this->table->generate($items);
-
-        //close form
-        $this->data['form_close'] = form_close();
-
-    }
-
-    public function edit_item($type, $id){
-        $this->data['pagebody'] = 'admin_single';
-        $record = $this->$type->get($id);
-
-        // Create form for editing an item
-        $this->data['admin_edit_form_open'] = form_open('maintenance/post', '', array('name' => 'edit-form'));
-        $items[] = array('Property Name', 'Value', 'Update Name', 'Update Value', 'Delete');
-
-        foreach (array_keys($record) as $key){
-            if ($key != 'materials' && $key != 'id') {
-                $items[] = array($key,
-                                 $record[$key],
-                                 form_input($this->set_input_params('n', 'input', $id, $type, $key)),
-                                 form_input($this->set_input_params('v', 'input', $id, $type, $record[$key])),
-                                 form_checkbox($this->set_input_params('c', 'checkbox', $id, $type, $key)));
-            } else if ($key == 'materials') {
-                $materials = $record[$key];
-            }
-        }
-        $items[] = array('');
-        $items[] = array('Add new property');
-        $items[] = array(form_input($this->set_input_params('y', 'input', $id, $type, '')),
-                         form_input($this->set_input_params('z', 'input', $id, $type, '')));
-        $items[] = array(form_reset('', 'Clear', "class='submit'"),
-                         form_submit('', 'Submit', "class='submit'"), '' , '');
-        // Display table
-        $this->data['admin_main_edit'] = $this->table->generate($items);
-
-        // Create table for editing recipe ingredients
-        if (isset($materials)) {
-
-            $ingredients[] = array('Name', 'Amount Needed',
-                'Update Name', 'Update Amount Used', 'Delete');
-            foreach ($materials as $item => $attrib) {
-                $ingredients[] = array($attrib['name'], $attrib['amount'],
-                    form_input($this->set_input_params('n', 'input', $id, $type, $attrib['name'])),
-                    form_input($this->set_input_params('v', 'input', $id, $type, $attrib['amount'])),
-                    form_checkbox($this->set_input_params('c', 'checkbox', $id, $type, $attrib['name'])));
-            }
-            $ingredients[] = array('');
-            $ingredients[] = array('Add new ingredient');
-            $ingredients[] = array(form_input($this->set_input_params('y_', 'input', $id, $type, '')),
-                                   form_input($this->set_input_params('z_', 'input', $id, $type, '')));
-            $ingredients[] = array(form_reset('', 'Clear', "class='submit'"),
-                form_submit('', 'Submit', "class='submit'"), '' , '');
-        }
-
-
-        // Display table to modify ingredients only if a recipe was selected
-        $this->data['admin_ingredients_edit'] =
-            isset($materials) ? $this->table->generate($ingredients) : NULL;
-        $this->data['admin_edit_form_close'] = form_close();
-        $this->render();
-    }
 
     private function set_input_params($prefix, $class, $id, $type, $old) {
         return array(
@@ -342,36 +258,37 @@ class Maintenance extends Application
         $this->index();
     }
 
-    public function post_recipes() {
+    public function post_() {
 
         $record = $this->session->userdata('record');
         $incoming = $this->input->post();
         $posting = $this->session->userdata('post');
-        
+        $type = ucfirst($this->session->userdata('type'));
+
         foreach(array_keys($incoming) as $entry) {
             $record->$entry = $incoming[$entry];
         }
         
         //validate
         $this->load->library('form_validation');
-        $this->form_validation->set_rules($this->Recipes->rules());
+        $this->form_validation->set_rules($this->$type->rules());
         if ($this->form_validation->run() != TRUE)
             $this->error_messages = $this->form_validation->error_array(); 
 
         if ($posting)
-                if ($this->Recipes->exists($record->id))
+                if ($this->$type->exists($record->id))
                         $this->error_messages[] = 'Duplicate key adding new material item';
 
         //save or not
         if (! empty($this->error_messages)) {
-            $this->edit_recipes(0);
+            $this->edit(ucfirst($type), 0);
             return;
         }
 
         if ($posting)
-            $res = $this->Recipes->add($record);
+            $res = $this->$type->add($record);
         else
-            $res = $this->Recipes->update($record);
+            $res = $this->$type->update($record);
 
         $this->index();
     }

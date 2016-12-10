@@ -57,6 +57,10 @@ $route['maintenance/edit/materials/(:num)'] = function($id) {
     return 'maintenance/edit_materials/' . $id;
 };
 
-$route['maintenance/edit/recipes/(:num)'] = function($id) {
-    return 'maintenance/edit_recipes/' . $id;
+$route['maintenance/edit/(:any)/(:num)'] = function($type, $id) {
+    return 'maintenance/edit/' . $type . '/' . $id;
+};
+
+$route['maintenance/delete/(:any)/(:num)'] = function($type, $id) {
+    return 'maintenance/delete/' . $type . '/' . $id;
 };
