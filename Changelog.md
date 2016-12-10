@@ -6,6 +6,7 @@ Members: Matthew, Dennis, Injo, Haram, Lydia
 2016-12-09 20:26 - Dennis
 - Updated Products model for CRUD operations
 - Modified recipes CRUD code in Maintenance controller to be generic to accomodate products
+- Dropped recipeId column from products table
 
 2016-12-09 19:07 - Dennis
 - Updated Recipes model for CRUD operations
