@@ -93,15 +93,22 @@ class Production extends Application
                     $numberCrafted = $tempOne;
             }else{
                     $numberCrafted = $tempTwo;
-            }
+            }            
             
             //sets amount to craft and display on result
-            if($numberCrafted > $amountToCraft) {
+            if($numberCrafted >= $amountToCraft) { 
                 $numberCrafted = $amountToCraft;    
             }else{
                 $numberCrafted = 0;
-            }
+            }            
             
+            //Calculated number of stocks used for each material
+            $stockOneUsed = $stockOne - ($record->AmountOne * $numberCrafted);
+            $stockTwoUsed = $stockTwo - ($record->AmountTwo * $numberCrafted);
+
+            var_dump($stockOneUsed);
+            var_dump($stockTwoUsed);
+
             //Displays message depending on result and sets logging
             if($numberCrafted == 0) {
                 $result = "Unable to craft " . $record_product->name . ", not enough materials.";                    
