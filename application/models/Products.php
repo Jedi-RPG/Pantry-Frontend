@@ -23,6 +23,18 @@ class Products extends CI_Model {
 		parent::__construct();
 	}
 
+	function rules() {
+		$config = [
+			['field'=>'id', 'label'=>'Product code', 'rules'=> 'required|integer'],
+			['field'=>'name', 'label'=>'Product name', 'rules'=> 'required'],
+			['field'=>'stock', 'label'=>'Stock', 'rules'=> 'required|integer'],
+			['field'=>'desc', 'label'=>'Description', 'rules'=> 'required'],
+			['field'=>'price', 'label'=>'Price', 'rules'=> 'required|decimal']
+		];
+		return $config;
+	}
+
+
 	// returns a recipe using recipeId
 	public function get($id)
 	{
@@ -38,11 +50,67 @@ class Products extends CI_Model {
 		return $result = $query->result();
 	}
 
+		// Update a record in the DB
+	function update($record)
+	{
+		// convert object to associative array, if needed
+		if (is_object($record))
+		{
+			$data = get_object_vars($record);
+		} else
+		{
+			$data = $record;
+		}
+		// update the DB table appropriately
+		$key = $data["id"];
+		$this->db->where('id', $key);
+		return $this->db->update('product', $data);
+	}
 
-	// clears transactions
-    public function clear() {
-        $this->session->unset_userdata('products');
-        echo 'products transactions cleared!';
-    }
+	// Create a new data object.
+	// Only use this method if intending to create an empty record and then
+	// populate it.
+	function create()
+	{
+		$names = ['id','name', 'stock','desc','price'];
+		$object = new StdClass;
+		foreach ($names as $name)
+			$object->$name = "";
+		return $object;
+	}
+
+
+	// Determine if a key exists
+	function exists($key, $key2 = null)
+	{
+		$this->db->where('id', $key);
+		$query = $this->db->get('product');
+		if ($query->num_rows() < 1)
+			return false;
+		return true;
+	}
+
+	// Add a record to the DB
+	function add($record)
+	{
+		// convert object to associative array, if needed
+		if (is_object($record))
+		{
+			$data = get_object_vars($record);
+		} else
+		{
+			$data = $record;
+		}
+		// update the DB table appropriately
+		$key = $data['id'];
+		return $this->db->insert('product', $data);
+	}
+
+	// Delete a record from the DB
+	function delete($key, $key2 = null)
+	{
+		$this->db->where('id', $key);
+		return $this->db->delete('product');
+	}
 
 }
