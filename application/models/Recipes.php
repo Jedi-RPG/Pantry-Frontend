@@ -97,4 +97,11 @@ class Recipes extends CI_Model {
 		return $this->db->insert('recipe', $data);
 	}
 
+	// Delete a record from the DB
+	function delete($key, $key2 = null)
+	{
+		$this->db->where('id', $key);
+		return $this->db->delete('recipe');
+	}
+
 }

@@ -6,9 +6,9 @@
     <div id="body">
         <div id="subtitles">
             <ul class="nav">
-                <li id="subtitle" class="activeSubtitle" onclick="changeTable(this)">Receiving</li>
-                <li id="subtitle" onclick="changeTable(this)">Production</li>
-                <li id="subtitle" onclick="changeTable(this)">Sales</li>
+                <li id="subtitle" class="activeSubtitle" onclick="changeTable(this)">Materials</li>
+                <li id="subtitle" onclick="changeTable(this)">Recipes</li>
+                <li id="subtitle" onclick="changeTable(this)">Products</li>
             </ul>
         </div>
         <div class="adTables">

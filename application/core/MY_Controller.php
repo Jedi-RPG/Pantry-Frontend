@@ -33,7 +33,7 @@ class Application extends CI_Controller
 			$current_page = substr($current_page,0,$index);
 		}
 		$this->data['dActive'] = $current_page == '' ? "class = 'active'" : "";
-		$this->data['aActive'] = $current_page == 'admin' ? "class = 'active'" : "";
+		$this->data['aActive'] = $current_page == 'maintenance' ? "class = 'active'" : "";
 		$this->data['rActive'] = $current_page == 'receiving' ? "class = 'active'" : "";
 		$this->data['pActive'] = $current_page == 'production' ? "class = 'active'" : "";
 		$this->data['sActive'] = $current_page == 'sales' ? "class = 'active'" : "";
