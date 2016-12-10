@@ -58,4 +58,43 @@ class Recipes extends CI_Model {
 		return $this->db->update('recipe', $data);
 	}
 
+	// Create a new data object.
+	// Only use this method if intending to create an empty record and then
+	// populate it.
+	function create()
+	{
+		$names = ['id','MaterialOneId', 'AmountOne','MaterialTwoId','AmountTwo'];
+		$object = new StdClass;
+		foreach ($names as $name)
+			$object->$name = "";
+		return $object;
+	}
+
+
+	// Determine if a key exists
+	function exists($key, $key2 = null)
+	{
+		$this->db->where('id', $key);
+		$query = $this->db->get('recipe');
+		if ($query->num_rows() < 1)
+			return false;
+		return true;
+	}
+
+	// Add a record to the DB
+	function add($record)
+	{
+		// convert object to associative array, if needed
+		if (is_object($record))
+		{
+			$data = get_object_vars($record);
+		} else
+		{
+			$data = $record;
+		}
+		// update the DB table appropriately
+		$key = $data['id'];
+		return $this->db->insert('recipe', $data);
+	}
+
 }

@@ -29,7 +29,6 @@ class Maintenance extends Application
     private function create_form_materials(){
         $this->session->unset_userdata('record');
 
-        // $this->data['form_open'] = form_open('maintenance/delete_material', '', array('name' => 'list-form'));
         $source = $this->Materials->all();
 
         // Set table headers
@@ -50,9 +49,6 @@ class Maintenance extends Application
 
         //Generate the materials table
         $this->data['Materials_table'] = $this->table->generate($items);
-
-        //close form
-        $this->data['form_close'] = form_close();       
     }
 
     public function edit_materials($id){
@@ -98,7 +94,7 @@ class Maintenance extends Application
         $this->render();
     }
 
-    private function add_material() {
+    public function add_material() {
          $record = $this->Materials->create();
          $this->session->set_userdata('record', $record);
          $this->edit_materials(0);
@@ -127,12 +123,23 @@ class Maintenance extends Application
 
             $items[] = array('<a href="/maintenance/edit/recipes' . '/' .
                              $record->id. '">' .
-                             $this->Products->get($record->id)->name . '</a>',
+                             $this->getProductName($record) . '</a>',
                 );
         }
 
+        // Add new items
+        $items[] = array('');
+        $items[] = array('<a href="/maintenance/add_recipe/" role="button" class="Submit">Create new recipe</a>',
+            '', '');
+
         //Generate the recipes table
         $this->data['Recipes_table'] = $this->table->generate($items);
+    }
+
+   public function add_recipe() {
+         $record = $this->Recipes->create();
+         $this->session->set_userdata('record', $record);
+         $this->edit_recipes(0);
     }
 
     public function edit_recipes($id) {
@@ -183,13 +190,6 @@ class Maintenance extends Application
         $this->show_any_errors();
         $this->render();
     }
-
-
-    // private function add_recipe() {
-    //      $record = $this->Materials->create();
-    //      $this->session->set_userdata('record', $record);
-    //      $this->edit_materials(0);
-    // }
 
    private function delete_recipe($id) {
 
@@ -307,41 +307,41 @@ class Maintenance extends Application
         );
     }
 
-    public function post() {
+    // public function post() {
 
-        $record = $this->session->userdata('record');
-        $incoming = $this->input->post();
-        $posting = $this->session->userdata('post');
+    //     $record = $this->session->userdata('record');
+    //     $incoming = $this->input->post();
+    //     $posting = $this->session->userdata('post');
 
-        foreach(array_keys($incoming) as $entry) {
-            $record->$entry = $incoming[$entry];
-        }
+    //     foreach(array_keys($incoming) as $entry) {
+    //         $record->$entry = $incoming[$entry];
+    //     }
         
-        //validate
-        $this->load->library('form_validation');
-        $this->form_validation->set_rules($this->Materials->rules());
-        if ($this->form_validation->run() != TRUE)
-            $this->error_messages = $this->form_validation->error_array(); 
+    //     //validate
+    //     $this->load->library('form_validation');
+    //     $this->form_validation->set_rules($this->Materials->rules());
+    //     if ($this->form_validation->run() != TRUE)
+    //         $this->error_messages = $this->form_validation->error_array(); 
 
-        if ($posting)
-                if ($this->Materials->exists($record->id))
-                        $this->error_messages[] = 'Duplicate key adding new material item';
+    //     if ($posting)
+    //             if ($this->Materials->exists($record->id))
+    //                     $this->error_messages[] = 'Duplicate key adding new material item';
 
-        //save or not
-        if (! empty($this->error_messages)) {
-            $this->edit_materials(0);
-            return;
-        }
+    //     //save or not
+    //     if (! empty($this->error_messages)) {
+    //         $this->edit_materials(0);
+    //         return;
+    //     }
 
-        if ($posting)
-            $res = $this->Materials->add($record);
-        else
-            $res = $this->Materials->update($record);
+    //     if ($posting)
+    //         $res = $this->Materials->add($record);
+    //     else
+    //         $res = $this->Materials->update($record);
 
-        // $this->data['admin_results'] = $res[0];
-        // $this->render();
-        $this->index();
-    }
+    //     // $this->data['admin_results'] = $res[0];
+    //     // $this->render();
+    //     $this->index();
+    // }
 
     public function post_recipes() {
 
@@ -365,7 +365,7 @@ class Maintenance extends Application
 
         //save or not
         if (! empty($this->error_messages)) {
-            $this->edit_materials(0);
+            $this->edit_recipes(0);
             return;
         }
 
@@ -373,9 +373,7 @@ class Maintenance extends Application
             $res = $this->Recipes->add($record);
         else
             $res = $this->Recipes->update($record);
-        // var_dump($res);
-        // $this->data['admin_results'] = $res[0];
-        // $this->render();
+
         $this->index();
     }
 
@@ -392,6 +390,13 @@ class Maintenance extends Application
         $this->data['error_messages'] = $this->parser->parse('admin_errors',['error_messages' => $result], true);
     }
 
+    private function getProductName($record){
+        $product = $this->Products->get($record->id);
+        if ($product == null){
+            return "uncreated product";
+        }
 
+        return $product->name;
+    }
 
 }

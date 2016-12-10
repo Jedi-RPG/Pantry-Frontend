@@ -13,19 +13,13 @@
         </div>
         <div class="adTables">
             <div id="m" class="activeTable">
-                {form_open}
-                    {Materials_table}
-                {form_close}
+                {Materials_table}
             </div>
             <div id="r" class="notActiveTable">
-                {form_open}
-                    {Recipes_table}
-                {form_close}
+                {Recipes_table}
             </div>
             <div id="p" class="notActiveTable">
-                {form_open}
-                    {Products_table}
-                {form_close}
+                {Products_table}
             </div>
         </div>
     </div>
