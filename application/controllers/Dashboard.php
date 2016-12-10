@@ -19,7 +19,7 @@ class Dashboard extends Application
 
         //$this->data['recipes_cost'] = $this->calc_products_cost();
 
-        $this->data['revenue'] = $this->calc_value('Products');
+        // $this->data['revenue'] = $this->calc_value('Products');
 
         $this->data['products_stocked'] = $this->num_items('Products');
 

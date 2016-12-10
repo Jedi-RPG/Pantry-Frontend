@@ -3,6 +3,12 @@
 ============================================
 Members: Matthew, Dennis, Injo, Haram, Lydia
 
+2016-12-09 19:07 - Dennis
+- Updated Recipes model for CRUD operations
+- Implemented CRUD for recipes in Maintenance controller 
+- Updated admin.js to use updated tab names
+- Updated MY_Controller to use updated tab names
+
 2016-12-08 20:59 - Lydia
 - Modified sales controller to show product list and single product
 
