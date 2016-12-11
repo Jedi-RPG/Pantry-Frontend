@@ -53,10 +53,6 @@ $route['default_controller'] = 'dashboard';
 $route['404_override'] = '';
 $route['translate_uri_dashes'] = FALSE;
 
-$route['maintenance/edit/materials/(:num)'] = function($id) {
-    return 'maintenance/edit_materials/' . $id;
-};
-
 $route['maintenance/edit/(:any)/(:num)'] = function($type, $id) {
     return 'maintenance/edit/' . $type . '/' . $id;
 };
