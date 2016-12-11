@@ -83,7 +83,7 @@ class Order extends CI_Model{
             $total += $value * $product->price;
         }
         
-        if($this->type == "Sales") {
+        if($this->type == "Sales" || $this->type == "Receiving" ) {
             $result .= PHP_EOL . 'Grand Total: $' . number_format($total, 2) . PHP_EOL;
         }
         

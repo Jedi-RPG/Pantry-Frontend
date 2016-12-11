@@ -6,7 +6,11 @@ Members: Matthew, Dennis, Injo, Haram, Lydia
 2016-12-11 13:24 - Dennis
 - Bugfix: sorted xml file array correctly
 
-2016-12-11 12:12 - Dennis
+2016-12-11 12:40 - Haram
+- Updated receiving controller to show the price of each material cost in outcome page.
+- Updated controllers to shows the grand total price for all the material for both outcome page and XML summary page.
+
+2016-12-11 12:10 - Dennis
 - Updated Dashboard to use order receipts to do calculations
 - Updated controllers to check user roles and redirect to dashboard if role is incorrect
 

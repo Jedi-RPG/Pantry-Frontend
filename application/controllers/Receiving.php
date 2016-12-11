@@ -87,39 +87,47 @@ class Receiving extends Application
 		$empty = "NOTHING WAS RECEIVED!";
 		$empty = "<b>" . $empty . "</b><br>Please try again!";
 	
-		$items[] = array('Ordered Items', '# Ordered Cases');
+		$items[] = array('Ordered Items', '# Ordered Cases','Cost');
 		
         //XML
         $order = new Order();
         $order->setType("Receiving");
                 
-		$i = 1;
-		$j = 1;
+
+		$j = false;
+        $total = 0;
+
 		foreach($_POST as $post_id => $cases)
 		{
 			if($cases != "" && $cases != 0){
 				$source = $this->Materials->get($post_id);
-				$items[] = array($source->name,$cases);
+				$items[] = array($source->name,$cases,$source->price * $cases);
 
 				$source->amount += $source->itemPerCase * $cases;
 				$this->Materials->update($source);
 
-				$j++;
+				$j = true;
+
+                $total += $source->price * $cases;
                                 
                 //XML
                 $order->addItem($post_id, $cases);
 			}
-			$i++;
-                }
+		
+        }
 
-		if($j == 1){
+        $outcome[] = array('line' => "<br><strong>Grand Total:</strong> " . $this->toDollars($total));
+        $this->data['result'] = $outcome;
+
+
+		if($j == false){
 			$this->data['Materials_table'] = $empty;
 		} else {
+             //XML
+            $order->saveOrder();
 			$this->data['Materials_table'] = $this->table->generate($items);
 		}
 
-        //XML
-        $order->saveOrder();
 		$this->render();
 
     }
