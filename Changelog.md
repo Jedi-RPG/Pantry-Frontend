@@ -2,6 +2,10 @@
 
 ============================================
 Members: Matthew, Dennis, Injo, Haram, Lydia
+2016-12-10 17:48 - Injo
+- sales controller updates the value to the db accordingly
+- production controller updates the value to the db accordingly
+- set num field helper min values to 0 for sales and receiving controller and 1 for production, they no longer get negative values
 
 2016-12-10 11:37 - Injo
 - Updated Sales Controller

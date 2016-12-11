@@ -37,7 +37,7 @@ class Production extends Application
             $this->createSingleRecipeTable($id);
             
             //form inits
-            $inputForm = array('type' => 'number', 'value' => '1', 'class' => 'num-field', 'name' => 'amountToCraft');
+            $inputForm = array('type' => 'number', 'value' => '1', 'min' => '1', 'class' => 'num-field', 'name' => 'amountToCraft');
             $formHidden = array('recipeId' => $id);
             
             $this->data['itemName'] = $record->name;
@@ -105,9 +105,10 @@ class Production extends Application
             //Calculated number of stocks used for each material
             $stockOneUsed = $stockOne - ($record->AmountOne * $numberCrafted);
             $stockTwoUsed = $stockTwo - ($record->AmountTwo * $numberCrafted);
-
-            var_dump($stockOneUsed);
-            var_dump($stockTwoUsed);
+            $source_materialOne->amount = $stockOneUsed;
+            $this->Materials->update($source_materialOne);
+            $source_materialTwo->amount = $stockTwoUsed;
+            $this->Materials->update($source_materialTwo);
 
             //Displays message depending on result and sets logging
             if($numberCrafted == 0) {

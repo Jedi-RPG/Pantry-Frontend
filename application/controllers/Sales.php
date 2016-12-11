@@ -19,7 +19,6 @@ class Sales extends Application
 		$this->data['pagebody'] = 'sale_list';
         //create table with list of products
 		$this->create_form('Products');
-
 		$this->render();
 	}
 
@@ -27,18 +26,14 @@ class Sales extends Application
 
         //Open form
         $this->data['form_open'] = form_open('sales/sales');
-
         // Get list of items
-
         $source = $this->$type->all();
-
         // Set table headers
         $items[] = array('Name', 'Description', 'Stock', 'Price', 'Quantity');
-
         // Add table rows
         foreach ($source as $record)
         {
-            $num_input = array('type' => 'number', 'value' => '0', 'class' => 'num-field', 'name' => $record->id);
+            $num_input = array('type' => 'number', 'value' => '0', 'min' => '0', 'class' => 'num-field', 'name' => $record->id);
             
             $items[] = array('<a href="/sales/get/' .
                               $record->id. '">' .
@@ -80,14 +75,18 @@ class Sales extends Application
         }
         $outcome = array();
         $totalSum = 0;
-        $okToProcess = 0;
+        $okToProcess = 0;        
     
         foreach($inventory as $product){
             $record = $this->Products->get($product['key']);
+            $stockAvailable = $record->stock;            
             $quantityOrdered = $product['value'];
 
-            if(($quantityOrdered != 0) && ($quantityOrdered <= $record->stock)){
-                $okToProcess = $quantityOrdered;   
+            if(($quantityOrdered != 0) && ($quantityOrdered <= $stockAvailable)){
+                $okToProcess = $quantityOrdered;
+                $newStock = $stockAvailable - $okToProcess;
+                $record->stock = $newStock;
+                $this->Products->update($record);   
             }else if($quantityOrdered == 0){
                 $okToProcess = 0;
             }else{
@@ -97,11 +96,10 @@ class Sales extends Application
             if($okToProcess == -1){
                 $outcome[] = array('line' => "Not enough stocks to process the order: " . $record->name . "</br>");
             }else if($okToProcess == 1){
-                $outcome[] = array('line' => "You ordered " . $okToProcess . ' ' . $record->name . " at " . $this->toDollars($record->price) . "per unit." . "</br>");
+                $outcome[] = array('line' => "You ordered " . $okToProcess . ' ' . $record->name . " at " . $this->toDollars($record->price) . " per unit." . "</br>");
             }else if($okToProcess > 1){
-                $outcome[] = array('line' => "You ordered " . $okToProcess . ' ' . $record->name . "s at " . $this->toDollars($record->price) . "per unit." . "</br>");
-            }            
-            
+                $outcome[] = array('line' => "You ordered " . $okToProcess . ' ' . $record->name . "s at " . $this->toDollars($record->price) . " per unit." . "</br>");
+            }                        
             if($okToProcess > 0){
                 $totalSum += $record->price * $okToProcess;    
             }            
