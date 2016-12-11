@@ -16,13 +16,15 @@
 <div id="container">
 	<div id="navigation">
 		<ul>
+			<li><a href="/toggle">Toggle Role</a></li>
+            <li><center>Role : <Strong>{userrole}</Strong></center></li>
+            <li>&nbsp</li>
 			<li><a href="/" {dActive}>Dashboard</a></li>
-			<li><a href="/maintenance" {aActive}>Maintenance</a></li>
 			<li><a href="/receiving" {rActive}>Receiving</a></li>
 			<li><a href="/production" {pActive}>Production</a></li>
 			<li><a href="/sales" {sActive}>Sales</a></li>
-                        <li><a href="/toggle">Toggle Role</a></li>
-                        <li><center>Role : {userrole}</center></li>
+			<li><a href="/maintenance" {aActive}>Maintenance</a></li>
+            
 		</ul>
 	</div>
 	{content}
