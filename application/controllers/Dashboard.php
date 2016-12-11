@@ -24,12 +24,35 @@ class Dashboard extends Application
         $this->data['products_stocked'] = $this->num_items('Products');
         $this->data['recipes_count'] = $this->num_items('Recipes');
 
+        $this->data['materials_value'] = $this->calc_stock('Materials');
+        $this->data['products_value'] = $this->calc_stock('Products');
+
         $this->render();
 
     }
 
     /*
      * param: 'Materials' or 'Products'
+     * Returns sum of item values from input model
+     */
+    private function calc_stock($type){
+        $sum = 0;
+
+        // get all entries from db
+        $records = $this->$type->all();
+        foreach ($records as $record) {
+            if ($type == "Materials")
+                $sum += $record->amount * $record->price / $record->itemPerCase;
+            else 
+                $sum += $record->stock * $record->price;
+        }
+
+        return $this->toDollars($sum, 2);
+    }
+
+    /*
+     * param2: 'Receiving' or 'Sales'
+     * param2: 'Materials' or 'Products'
      * Returns sum of item values from input model
      */
     private function calc_value($page, $model){

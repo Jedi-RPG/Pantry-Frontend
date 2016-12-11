@@ -5,6 +5,12 @@
 
 	<div id="body">
 		<div id="board">
+			<p id="data">Value of stocked materials: {materials_value}</p>
+		</div>
+		<div id="board">
+			<p id="data">Value of stocked products: {products_value}</p>
+		</div>
+		<div id="board">
 			<p id="data">{materials_cost} spent purchasing inventory</p>
 		</div>
 		<div id="board">

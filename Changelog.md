@@ -3,6 +3,9 @@
 ============================================
 Members: Matthew, Dennis, Injo, Haram, Lydia
 
+2016-12-11 15:43 - Dennis
+- Added two panels to dashboard to show value of stock for materials and products
+
 2016-12-11 13:24 - Dennis
 - Bugfix: sorted xml file array correctly
 
