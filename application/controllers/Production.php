@@ -8,6 +8,7 @@ class Production extends Application
 	function __construct()
 	{
 		parent::__construct();
+                $this->load->model("Order");
 	}
 
 	/**
@@ -17,6 +18,7 @@ class Production extends Application
 	{
 		// this is the view we want shown
 		$this->data['pagebody'] = 'production_list';
+                $this->data['summary'] = "<a href ='/production/summary'>Summary</a>";
                 
         //create table with list of recipes
         $this->createRecipeListTable('Products');
@@ -118,6 +120,12 @@ class Production extends Application
                 $record_product->stock = $newStock + $numberCrafted;
                 $this->Products->update($record_product);
                 $result = "Crafted " . $numberCrafted . " " . $record_product->name . ".<br>";
+                
+                //OrderXML
+                $order = new Order();
+                $order->setType("Production");
+                $order->addItem($record_product->id, $numberCrafted);
+                $order->saveOrder();
             }
             
             $this->data['craftingResult'] = $result;
@@ -197,4 +205,40 @@ class Production extends Application
             //Generate the materials table
             $this->data['recipeMaterialTable'] = $this->table->generate($items);
         }
+        
+    public function summary() {
+        // identify all of the order files
+        $type = "Production";
+        
+        $this->load->helper('directory');
+        $candidates = directory_map('../data/order');
+        $parms = array();
+        foreach ($candidates as $filename) {
+           if (substr($filename,0,10) == $type) {
+               // restore that order object
+               $order = new Order();
+               $order->loadXML('../data/order/' . $filename);
+            // setup view parameters
+               $parms[] = array(
+                   'number' => $order->number,
+                   'type' => $order->type,
+                   'datetime' => $order->datetime
+                );
+            }
+        }
+        
+        $this->data['type'] = $type;
+        $this->data['orders'] = $parms;
+        $this->data['pagebody'] = 'summary';
+        $this->render('template');  // use the default template
+    }
+    
+    public function examine($which) {
+        $order = new Order();
+        $order->loadXML('../data/order/' . $which . '.xml');
+        $stuff = $order->generateReceipt();
+        $this->data['receipt'] = $this->parsedown->parse($stuff);
+        $this->data['pagebody'] = 'receipt';
+        $this->render();
+    }
 }

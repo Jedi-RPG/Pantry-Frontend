@@ -3,6 +3,16 @@
 ============================================
 Members: Matthew, Dennis, Injo, Haram, Lydia
 
+2016-12-11 04:45 - Matthew
+- Updated generateReceipt() in Order model
+- Added Summary view
+- Can select individual receipts to view from summary view
+- Added Receipt view
+- Edited sales_List view to have Summary
+- Edited production_list view to have Summary
+- Edited receiving_list view to have Summary
+- Summary now works for Sales, Production and Receiving
+
 2016-12-10 22:41 - Matthew
 - Created Order model
 - Order model can save orders as xml
