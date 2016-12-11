@@ -19,6 +19,11 @@ class Receiving extends Application
 	 */
 	public function index()
 	{
+        //check user role, redirect to dashboard if incorrect role
+        $userrole = $this->session->userdata('userrole');
+        if ($userrole !== "Admin" && $userrole !== 'User') {
+            redirect('/', 'refresh');
+        }
 
 		// this is the view we want shown
 		$this->data['pagebody'] = 'receiving_list';

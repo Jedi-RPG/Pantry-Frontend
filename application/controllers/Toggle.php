@@ -14,12 +14,12 @@ class Toggle extends Application {
 		$role = $this->session->userdata('userrole');
                 
 		if ($role == 'Guest') {
-                    $role = 'User';
-                }elseif($role == 'User'){
-                    $role = 'Admin';
-                }else{
-                    $role = 'Guest';
-                }
+            $role = 'User';
+        }elseif($role == 'User'){
+            $role = 'Admin';
+        }else{
+            $role = 'Guest';
+        }
                 
 		$this->session->set_userdata('userrole', $role);
 		redirect($origin);
