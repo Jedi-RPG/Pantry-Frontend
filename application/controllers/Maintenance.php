@@ -87,6 +87,7 @@ class Maintenance extends Application
             $record = $this->session->userdata('record');
             $this->session->set_userdata('post', true); 
         }
+
         $this->session->set_userdata('record',$record); 
         $this->session->set_userdata('type',$type); 
         
@@ -151,7 +152,10 @@ class Maintenance extends Application
 
         //save or not
         if (! empty($this->error_messages)) {
-            $this->edit(ucfirst($type), 0);
+            if ($posting)
+                $this->edit(ucfirst($type), 0);
+            else 
+                $this->edit(ucfirst($type), $record->id);
             return;
         }
 
