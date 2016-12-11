@@ -34,7 +34,7 @@ class Receiving extends Application
 
         foreach ($source as $record)
         {
-			$text_data = array('name' => $record->id,'type' => 'number', 'value' => '0');
+			$text_data = array('name' => $record->id,'type' => 'number', 'value' => '0', 'min' => '0');
 			$case = $record->amount / $record->itemPerCase;
             $items[] = array ( '<a href="/receiving/get/' .
                                $record->id. '">' .

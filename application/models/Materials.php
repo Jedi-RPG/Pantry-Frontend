@@ -23,15 +23,6 @@ class Materials extends CI_Model {
 		return $config;
 	}
 
-	public function getMaterialWithName($name)
-	{
-		// iterate over the data until we find the one we want
-		foreach ($this->data as $record)
-			if ($record['name'] == $name)
-				return $record;
-		return null;
-	}
-	
 	public function get($key)
 	{
 		$this->rest->initialize(array('server' => REST_SERVER));

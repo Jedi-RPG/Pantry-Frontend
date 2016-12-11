@@ -37,7 +37,7 @@ class Production extends Application
             $this->createSingleRecipeTable($id);
             
             //form inits
-            $inputForm = array('type' => 'number', 'value' => '1', 'class' => 'num-field', 'name' => 'amountToCraft');
+            $inputForm = array('type' => 'number', 'value' => '1', 'min' => '1', 'class' => 'num-field', 'name' => 'amountToCraft');
             $formHidden = array('recipeId' => $id);
             
             $this->data['itemName'] = $record->name;
@@ -93,24 +93,30 @@ class Production extends Application
                     $numberCrafted = $tempOne;
             }else{
                     $numberCrafted = $tempTwo;
-            }
+            }            
             
             //sets amount to craft and display on result
-            if($numberCrafted > $amountToCraft) {
+            if($numberCrafted >= $amountToCraft) { 
                 $numberCrafted = $amountToCraft;    
             }else{
                 $numberCrafted = 0;
-            }
+            }            
             
+            //Calculated number of stocks used for each material
+            $stockOneUsed = $stockOne - ($record->AmountOne * $numberCrafted);
+            $stockTwoUsed = $stockTwo - ($record->AmountTwo * $numberCrafted);
+            $source_materialOne->amount = $stockOneUsed;
+            $this->Materials->update($source_materialOne);
+            $source_materialTwo->amount = $stockTwoUsed;
+            $this->Materials->update($source_materialTwo);
+
             //Displays message depending on result and sets logging
             if($numberCrafted == 0) {
                 $result = "Unable to craft " . $record_product->name . ", not enough materials.";                    
             }else{
-                //foreach ($record['materials'] as $material)
-                //{
-                //   $temp = $this->Materials->getMaterialWithName($material['name']);
-                //   $this->Transactions->setRecipes($temp['id'], (Int)($material['amount'] * $numberCrafted));
-                //}
+                $newStock = $record_product->stock;
+                $record_product->stock = $newStock + $numberCrafted;
+                $this->Products->update($record_product);
                 $result = "Crafted " . $numberCrafted . " " . $record_product->name . ".<br>";
             }
             
