@@ -117,12 +117,12 @@ class Maintenance extends Application
         // Add table rows
         foreach ($source as $record)
         {
-            $chk_data = array('name' => 'c_' . $record['id']);
+            $chk_data = array('name' => 'c_' . $record->id);
 
             $items[] = array('<a href="/maintenance/edit/' .
                              strtolower($type) . '/' .
-                             $record['id']. '">' .
-                             $record['name'] . '</a>',
+                             $record->id. '">' .
+                             $record->name . '</a>',
                 form_checkbox($chk_data, "", "", "class='checkbox'"));
 
         }
