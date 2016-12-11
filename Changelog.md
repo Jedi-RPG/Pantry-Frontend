@@ -3,6 +3,9 @@
 ============================================
 Members: Matthew, Dennis, Injo, Haram, Lydia
 
+2016-12-11 13:24 - Dennis
+- Bugfix: sorted xml file array correctly
+
 2016-12-11 12:40 - Haram
 - Updated receiving controller to show the price of each material cost in outcome page.
 - Updated controllers to shows the grand total price for all the material for both outcome page and XML summary page.
