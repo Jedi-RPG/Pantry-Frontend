@@ -1,6 +1,7 @@
 <?php
 
 defined('BASEPATH') OR exit('No direct script access allowed');
+define("REC_ORDER_DIR", "../data/order/Receiving/");
 
 class Receiving extends Application
 {
@@ -8,7 +9,7 @@ class Receiving extends Application
 	function __construct()
 	{
 		parent::__construct();
-                $this->load->model("Order");
+        $this->load->model("Order");
 	}
 	
 	
@@ -21,7 +22,7 @@ class Receiving extends Application
 
 		// this is the view we want shown
 		$this->data['pagebody'] = 'receiving_list';
-                $this->data['summary'] = "<a href ='/receiving/summary'>Summary</a>";
+        $this->data['summary'] = "<a href ='/receiving/summary'>Summary</a>";
 
 		// build the list of authors, to pass on to our view
 		$source = $this->Materials->all();
@@ -83,9 +84,9 @@ class Receiving extends Application
 	
 		$items[] = array('Ordered Items', '# Ordered Cases');
 		
-                //XML
-                $order = new Order();
-                $order->setType("Receiving");
+        //XML
+        $order = new Order();
+        $order->setType("Receiving");
                 
 		$i = 1;
 		$j = 1;
@@ -100,8 +101,8 @@ class Receiving extends Application
 
 				$j++;
                                 
-                                //XML
-                                $order->addItem($post_id, $cases);
+                //XML
+                $order->addItem($post_id, $cases);
 			}
 			$i++;
                 }
@@ -112,8 +113,8 @@ class Receiving extends Application
 			$this->data['Materials_table'] = $this->table->generate($items);
 		}
 
-                //XML
-                $order->saveOrder();
+        //XML
+        $order->saveOrder();
 		$this->render();
 
     }
@@ -127,20 +128,18 @@ class Receiving extends Application
         $type = "Receiving";
         
         $this->load->helper('directory');
-        $candidates = directory_map('../data/order');
+        $candidates = directory_map(REC_ORDER_DIR);
         $parms = array();
         foreach ($candidates as $filename) {
-           if (substr($filename,0,9) == $type) {
-               // restore that order object
-               $order = new Order();
-               $order->loadXML('../data/order/' . $filename);
-            // setup view parameters
-               $parms[] = array(
-                   'number' => $order->number,
-                   'type' => $order->type,
-                   'datetime' => $order->datetime
-                );
-            }
+           // restore that order object
+           $order = new Order();
+           $order->loadXML(REC_ORDER_DIR . $filename);
+        // setup view parameters
+           $parms[] = array(
+               'number' => $order->number,
+               'type' => $order->type,
+               'datetime' => $order->datetime
+            );
         }
         
         $this->data['type'] = $type;
@@ -151,7 +150,7 @@ class Receiving extends Application
     
     public function examine($which) {
         $order = new Order();
-        $order->loadXML('../data/order/' . $which . '.xml');
+        $order->loadXML(REC_ORDER_DIR . $which . '.xml');
         $stuff = $order->generateReceipt();
         $this->data['receipt'] = $this->parsedown->parse($stuff);
         $this->data['pagebody'] = 'receipt';

@@ -3,6 +3,14 @@
 ============================================
 Members: Matthew, Dennis, Injo, Haram, Lydia
 
+2016-12-11 12:1 - Dennis
+- Updated Dashboard to use order receipts to do calculations
+
+2016-12-11 10:44 - Dennis
+- Updated orders to save in respective directories
+- Updated orders to save in sequential order numbers
+- Added padding to <td> elements
+
 2016-12-11 04:45 - Matthew
 - Updated generateReceipt() in Order model
 - Added Summary view

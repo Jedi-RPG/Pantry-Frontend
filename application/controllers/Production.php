@@ -1,6 +1,7 @@
 <?php
 
 defined('BASEPATH') OR exit('No direct script access allowed');
+define("PROD_ORDER_DIR", "../data/order/Production/");
 
 class Production extends Application
 {
@@ -8,7 +9,7 @@ class Production extends Application
 	function __construct()
 	{
 		parent::__construct();
-                $this->load->model("Order");
+        $this->load->model("Order");
 	}
 
 	/**
@@ -211,20 +212,18 @@ class Production extends Application
         $type = "Production";
         
         $this->load->helper('directory');
-        $candidates = directory_map('../data/order');
+        $candidates = directory_map(PROD_ORDER_DIR);
         $parms = array();
         foreach ($candidates as $filename) {
-           if (substr($filename,0,10) == $type) {
-               // restore that order object
-               $order = new Order();
-               $order->loadXML('../data/order/' . $filename);
-            // setup view parameters
-               $parms[] = array(
-                   'number' => $order->number,
-                   'type' => $order->type,
-                   'datetime' => $order->datetime
-                );
-            }
+           // restore that order object
+           $order = new Order();
+           $order->loadXML(PROD_ORDER_DIR . $filename);
+        // setup view parameters
+           $parms[] = array(
+               'number' => $order->number,
+               'type' => $order->type,
+               'datetime' => $order->datetime
+            );
         }
         
         $this->data['type'] = $type;
@@ -235,7 +234,7 @@ class Production extends Application
     
     public function examine($which) {
         $order = new Order();
-        $order->loadXML('../data/order/' . $which . '.xml');
+        $order->loadXML(PROD_ORDER_DIR . $which . '.xml');
         $stuff = $order->generateReceipt();
         $this->data['receipt'] = $this->parsedown->parse($stuff);
         $this->data['pagebody'] = 'receipt';
