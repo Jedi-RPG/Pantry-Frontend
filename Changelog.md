@@ -3,6 +3,14 @@
 ============================================
 Members: Matthew, Dennis, Injo, Haram, Lydia
 
+2016-12-10 22:41 - Matthew
+- Created Order model
+- Order model can save orders as xml
+- Order model can generate receipts
+- Order model can load data from xml
+- Changed Sales controller to use Order model for receipts
+- Edited sale_confirmation view
+
 2016-12-09 20:26 - Dennis
 - Updated Products model for CRUD operations
 - Modified recipes CRUD code in Maintenance controller to be generic to accomodate products

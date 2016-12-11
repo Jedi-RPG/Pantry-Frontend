@@ -5,9 +5,10 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 class Sales extends Application
 {
 
-    function __construct()
+        function __construct()
 	{
 		parent::__construct();
+                $this->load->model('Order');
 	}
 
 	/**
@@ -74,29 +75,21 @@ class Sales extends Application
 
     public function sales(){
         $this->data['pagebody'] = 'sale_confirmation';
-        //$inventory[] = array();
+
+        $order = new Order();
+        $order->setType("Sales");
+        
         foreach($_POST as $post_name => $post_value){
-            $this->Transactions->setProducts($post_name, $post_value);
-            $inventory[] = array('key' => $post_name, 'value' => $post_value);
-        }
-
-        $result = array();
-        $sum = 0;
-        foreach($inventory as $source){
-            $record = $this->Products->get($source['key']);
-
-            if($source['value'] == 1){
-                $result[] = array('line' => "You ordered " . $source['value'] . ' ' .  $record->name .
-                    " at " . $this->toDollars($record->price)  . " per unit." . "</br>");
-            }else if($source['value'] > 1){
-                $result[] = array('line' => "You ordered " . $source['value'] . ' ' .  $record->name .
-                    "s at " . $this->toDollars($record->price)  . " per unit." . "</br>");
+            if($post_value > 0) {
+                $order->addItem($post_name, $post_value);
             }
-
-            $sum += $record->price * $source['value'];
         }
-        $result[] = array('line' => "<br><strong>Grand Total:</strong> " . $this->toDollars($sum));
-        $this->data['result'] = $result;
+        
+        //Save to xml
+        $order->saveOrder();
+
+        //Receipt
+        $this->data['receipt'] = $this->parsedown->parse($order->generateReceipt());
 
         $this->render();
     }

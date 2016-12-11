@@ -5,9 +5,7 @@
 
     <div id="body">
         <div id="listTable">
-            {result}
-            {line}
-            {/result}
+            {receipt}
             <hr>
             {previous}
         </div>
