@@ -8,6 +8,7 @@ class Maintenance extends Application
     function __construct()
     {
         parent::__construct();
+        $this->load->helper('url');
     }
 
     public function index()
@@ -126,7 +127,8 @@ class Maintenance extends Application
         $type = ucfirst($type);
         $this->$type->delete($id);
 
-        $this->index();
+        // $this->index();
+        redirect('/maintenance/', 'refresh');
     }
 
     public function post() {
@@ -164,7 +166,8 @@ class Maintenance extends Application
         else
             $res = $this->$type->update($record);
 
-        $this->index();
+        // $this->index();
+        redirect('/maintenance/', 'refresh');
     }
 
     /*
