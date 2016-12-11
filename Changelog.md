@@ -3,6 +3,38 @@
 ============================================
 Members: Matthew, Dennis, Injo, Haram, Lydia
 
+2016-12-10 20:20 - Haram
+- Edited methods in Dashboard controller to take in values from backend and database for product, material, and recipe.
+- Took out methods that wasn't using to clean out the code for material model and dashboard controller.
+
+2016-12-10 19:16 - Dennis
+- Bugfix: warning in maintenance edit triggers duplicate id warning in subsequent submissions
+- Bugfix: Maintenance URL stays at post url after a post, causing problems for the previous button
+- Styled new maintenance buttons 
+
+2016-12-10 17:48 - Injo
+- sales controller updates the value to the db accordingly
+- production controller updates the value to the db accordingly
+- set num field helper min values to 0 for sales and receiving controller and 1 for production, they no longer get negative values
+
+2016-12-10 11:37 - Injo
+- Updated Sales Controller
+- updating to db still on the work
+
+2016-12-09 22:57 - Injo
+- minor changes from production controller
+
+2016-12-09 20:26 - Dennis
+- Updated Products model for CRUD operations
+- Modified recipes CRUD code in Maintenance controller to be generic to accomodate products
+- Dropped recipeId column from products table
+
+2016-12-09 19:07 - Dennis
+- Updated Recipes model for CRUD operations
+- Implemented CRUD for recipes in Maintenance controller 
+- Updated admin.js to use updated tab names
+- Updated MY_Controller to use updated tab names
+
 2016-12-08 20:59 - Lydia
 - Modified sales controller to show product list and single product
 

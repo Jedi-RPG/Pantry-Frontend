@@ -6,26 +6,20 @@
     <div id="body">
         <div id="subtitles">
             <ul class="nav">
-                <li id="subtitle" class="activeSubtitle" onclick="changeTable(this)">Receiving</li>
-                <li id="subtitle" onclick="changeTable(this)">Production</li>
-                <li id="subtitle" onclick="changeTable(this)">Sales</li>
+                <li id="subtitle" class="activeSubtitle" onclick="changeTable(this)">Materials</li>
+                <li id="subtitle" onclick="changeTable(this)">Recipes</li>
+                <li id="subtitle" onclick="changeTable(this)">Products</li>
             </ul>
         </div>
         <div class="adTables">
             <div id="m" class="activeTable">
-                {form_open}
-                    {Materials_table}
-                {form_close}
+                {Materials_table}
             </div>
             <div id="r" class="notActiveTable">
-                {form_open}
-                    {Recipes_table}
-                {form_close}
+                {Recipes_table}
             </div>
             <div id="p" class="notActiveTable">
-                {form_open}
-                    {Products_table}
-                {form_close}
+                {Products_table}
             </div>
         </div>
     </div>

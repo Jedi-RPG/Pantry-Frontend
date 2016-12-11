@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: 127.0.0.1
--- Generation Time: Dec 08, 2016 at 09:39 AM
+-- Generation Time: Dec 10, 2016 at 05:30 AM
 -- Server version: 10.1.19-MariaDB
 -- PHP Version: 5.6.28
 
@@ -44,28 +44,27 @@ CREATE TABLE `product` (
   `name` varchar(32) NOT NULL,
   `stock` int(11) NOT NULL,
   `desc` text NOT NULL,
-  `price` decimal(10,2) NOT NULL,
-  `recipeId` int(11) NOT NULL
+  `price` decimal(10,2) NOT NULL
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 --
 -- Dumping data for table `product`
 --
 
-INSERT INTO `product` (`id`, `name`, `stock`, `desc`, `price`, `recipeId`) VALUES
-(1, 'health potion', 1, 'Restores 150 Health over 15 seconds', '50.00', 1),
-(2, 'mana potion', 100, 'Restores 150 Mana over 15 seconds', '50.00', 2),
-(3, 'iron sword', 233, '+40 Attack Damage', '1300.00', 3),
-(4, 'iron breastplate', 219, '+40 Armor', '800.00', 4),
-(5, 'iron greaves', 3, 'Enhanced Movement: +25 Movement Speed', '300.00', 5),
-(6, 'steel sword', 99, '+75 Attack Damage', '2800.00', 6),
-(7, 'steel breastplate', 1200, '+100 Armor', '2300.00', 7),
-(8, 'steel greaves', 322, 'Enhacned Movement: +55 Movement Speed', '900.00', 8),
-(9, 'arrow', 19, '+25 Attack Damage', '1000.00', 9),
-(10, 'fire scroll', 80, 'Elemental Enchanting: +5% Fire Damage', '700.00', 10),
-(11, 'water scroll', 500, 'Elemental Enchanting: +5% Water Damage', '700.00', 11),
-(12, 'lightning scroll', 43, 'Elemental Enchanting: +5% Lightning Damage', '700.00', 12),
-(13, 'poison scroll', 1234, 'Elemental Enchanting: +5% Poison Damage', '700.00', 13);
+INSERT INTO `product` (`id`, `name`, `stock`, `desc`, `price`) VALUES
+(1, 'health potion', 1, 'Restores 150 Health over 15 seconds', '50.00'),
+(2, 'mana potion', 100, 'Restores 150 Mana over 15 seconds', '50.00'),
+(3, 'iron sword', 233, '+40 Attack Damage', '1300.00'),
+(4, 'iron breastplate', 219, '+40 Armor', '800.00'),
+(5, 'iron greaves', 3, 'Enhanced Movement: +25 Movement Speed', '300.00'),
+(6, 'steel sword', 99, '+75 Attack Damage', '2800.00'),
+(7, 'steel breastplate', 1200, '+100 Armor', '2300.00'),
+(8, 'steel greaves', 322, 'Enhacned Movement: +55 Movement Speed', '900.00'),
+(9, 'arrow', 19, '+25 Attack Damage', '1000.00'),
+(10, 'fire scroll', 80, 'Elemental Enchanting: +5% Fire Damage', '700.00'),
+(11, 'water scroll', 500, 'Elemental Enchanting: +5% Water Damage', '700.00'),
+(12, 'lightning scroll', 43, 'Elemental Enchanting: +5% Lightning Damage', '700.00'),
+(13, 'poison scroll', 1234, 'Elemental Enchanting: +5% Poison Damage', '700.00');
 
 -- --------------------------------------------------------
 

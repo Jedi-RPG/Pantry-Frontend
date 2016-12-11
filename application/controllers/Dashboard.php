@@ -17,7 +17,7 @@ class Dashboard extends Application
 
         $this->data['materials_cost'] = $this->calc_value('Materials');
 
-        //$this->data['recipes_cost'] = $this->calc_products_cost();
+        $this->data['recipes_cost'] = $this->calc_products_cost();
 
         $this->data['revenue'] = $this->calc_value('Products');
 
@@ -28,20 +28,6 @@ class Dashboard extends Application
         $this->render();
 
     }
-      /*
-       * Deprecated: no longer logging transactions
-       */
-//    public function calculate_value_purchased($type, $getInventory){
-//        $inventory = $getInventory;
-//        $sum = 0;
-//        for ($i = 2; $i <= count($inventory); $i++){
-//            if ($inventory[$i]!= 0){
-//                $record = $this->$type->get($i);
-//                $sum += $record['price'] * $inventory[$i];
-//            }
-//        }
-//        return $sum;
-//    }
 
     /*
      * param: 'Materials' or 'Products'
@@ -54,7 +40,7 @@ class Dashboard extends Application
             if ($type == 'Materials'){
                 $sum += $record->price * $record->amount / $record->itemPerCase;
             } else {
-                $sum += $record['price'] * $record['amount'];
+                $sum += $record->price * $record->stock;
             }
 
         }
@@ -69,8 +55,8 @@ class Dashboard extends Application
         $item_list = $this->Products->all();
         $sum = 0;
         foreach ($item_list as $record){
-            $num_made = $record['amount'];
-            $cost_single = $this->calc_ingredients_cost($record['id']);
+            $num_made = $record->stock;
+            $cost_single = $this->calc_ingredients_cost($record->id);
             $sum += $num_made * $cost_single;
         }
 
@@ -82,12 +68,14 @@ class Dashboard extends Application
      * Returns cost of ingredients for one crafted item from input recipe
      */
     private function calc_ingredients_cost($id){
-        $materials = $this->Recipes->get($id)['materials'];
+        $recipe = $this->Recipes->get($id);
+        $materialOne = $this->Materials->get($recipe->MaterialOneId);
+        $materialTwo = $this->Materials->get($recipe->MaterialTwoId);
+        
         $sum = 0;
-        foreach ($materials as $item => $attrib){
-            $material = $this->Materials->getMaterialWithName($attrib['name']);
-            $sum += $material['price'] / $material['itemPerCase'] * $attrib['amount'];
-        }
+
+        $sum += $materialOne->price / $materialOne->itemPerCase * $recipe->AmountOne;
+        $sum += $materialTwo->price / $materialTwo->itemPerCase * $recipe->AmountTwo;
 
         return $sum;
     }

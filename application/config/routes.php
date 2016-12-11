@@ -54,5 +54,9 @@ $route['404_override'] = '';
 $route['translate_uri_dashes'] = FALSE;
 
 $route['maintenance/edit/(:any)/(:num)'] = function($type, $id) {
-    return 'maintenance/edit_materials/' . $id;
+    return 'maintenance/edit/' . $type . '/' . $id;
+};
+
+$route['maintenance/delete/(:any)/(:num)'] = function($type, $id) {
+    return 'maintenance/delete/' . $type . '/' . $id;
 };
