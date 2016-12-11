@@ -1,6 +1,7 @@
 <?php
 
 defined('BASEPATH') OR exit('No direct script access allowed');
+define("SALES_ORDER_DIR", "../data/order/Sales/");
 
 class Sales extends Application
 {
@@ -133,20 +134,18 @@ class Sales extends Application
         $type = "Sales";
         
         $this->load->helper('directory');
-        $candidates = directory_map('../data/order');
+        $candidates = directory_map(SALES_ORDER_DIR);
         $parms = array();
         foreach ($candidates as $filename) {
-           if (substr($filename,0,5) == $type) {
-               // restore that order object
-               $order = new Order();
-               $order->loadXML('../data/order/' . $filename);
-            // setup view parameters
-               $parms[] = array(
-                   'number' => $order->number,
-                   'type' => $order->type,
-                   'datetime' => $order->datetime
-                );
-            }
+           // restore that order object
+           $order = new Order();
+           $order->loadXML(SALES_ORDER_DIR . $filename);
+        // setup view parameters
+           $parms[] = array(
+               'number' => $order->number,
+               'type' => $order->type,
+               'datetime' => $order->datetime
+            );
         }
         
         $this->data['type'] = $type;
@@ -157,7 +156,7 @@ class Sales extends Application
     
     public function examine($which) {
         $order = new Order();
-        $order->loadXML('../data/order/' . $which . '.xml');
+        $order->loadXML(SALES_ORDER_DIR . $which . '.xml');
         $stuff = $order->generateReceipt();
         $this->data['receipt'] = $this->parsedown->parse($stuff);
         $this->data['pagebody'] = 'receipt';

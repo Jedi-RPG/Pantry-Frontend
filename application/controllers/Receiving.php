@@ -1,6 +1,7 @@
 <?php
 
 defined('BASEPATH') OR exit('No direct script access allowed');
+define("REC_ORDER_DIR", "../data/order/Receiving/");
 
 class Receiving extends Application
 {
@@ -127,20 +128,18 @@ class Receiving extends Application
         $type = "Receiving";
         
         $this->load->helper('directory');
-        $candidates = directory_map('../data/order');
+        $candidates = directory_map(REC_ORDER_DIR);
         $parms = array();
         foreach ($candidates as $filename) {
-           if (substr($filename,0,9) == $type) {
-               // restore that order object
-               $order = new Order();
-               $order->loadXML('../data/order/' . $filename);
-            // setup view parameters
-               $parms[] = array(
-                   'number' => $order->number,
-                   'type' => $order->type,
-                   'datetime' => $order->datetime
-                );
-            }
+           // restore that order object
+           $order = new Order();
+           $order->loadXML(REC_ORDER_DIR . $filename);
+        // setup view parameters
+           $parms[] = array(
+               'number' => $order->number,
+               'type' => $order->type,
+               'datetime' => $order->datetime
+            );
         }
         
         $this->data['type'] = $type;
@@ -151,7 +150,7 @@ class Receiving extends Application
     
     public function examine($which) {
         $order = new Order();
-        $order->loadXML('../data/order/' . $which . '.xml');
+        $order->loadXML(REC_ORDER_DIR . $which . '.xml');
         $stuff = $order->generateReceipt();
         $this->data['receipt'] = $this->parsedown->parse($stuff);
         $this->data['pagebody'] = 'receipt';

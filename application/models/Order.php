@@ -11,6 +11,9 @@
  *
  * @author Pika
  */
+
+define("ORDER_DIR", "../data/order/");
+
 class Order extends CI_Model{
     //put your code here
     function __construct() {
@@ -90,14 +93,15 @@ class Order extends CI_Model{
     public function saveOrder() {
         // figure out the order to use
         while ($this->number == 0) {
-            // pick random 3 digit #
-            $test = rand(100,999);
+            // get current order number for this type and increment
+            $order_number = $this->getOrderNumber();
+
             // use this if the file doesn't exist
-            if (!file_exists('../data/order/'. $this->type . $test.'.xml'))
-                    $this->number = $test;
+            if (!file_exists(ORDER_DIR . $this->type . $order_number.'.xml'))
+                    $this->number = $order_number;
         }
         // and establish the checkout time
-        $this->datetime = date(DATE_RFC2822);
+        $this->datetime = date("Y-m-d H:i:s");
 
         // start empty
         $xml = new SimpleXMLElement('<order/>');
@@ -112,6 +116,13 @@ class Order extends CI_Model{
         }
 
         // save it
-        $xml->asXML('../data/order/' . $this->type . $this->number . '.xml');
+        $xml->asXML(ORDER_DIR . $this->type . '/' . $this->number . '.xml');
+    }
+
+    public function getOrderNumber(){
+
+        $files = scandir(ORDER_DIR . '/' . $this->type, 1);
+        $current_number = substr($files[0], 0, -4);
+        return $current_number + 1;
     }
 }
