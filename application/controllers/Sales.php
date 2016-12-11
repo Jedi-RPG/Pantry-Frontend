@@ -5,9 +5,10 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 class Sales extends Application
 {
 
-    function __construct()
+        function __construct()
 	{
 		parent::__construct();
+                $this->load->model('Order');
 	}
 
 	/**
@@ -69,10 +70,14 @@ class Sales extends Application
 
     public function sales(){
         $this->data['pagebody'] = 'sale_confirmation';
-        //$inventory[] = array();
-        foreach($_POST as $post_name => $post_value){    
+
+        $order = new Order();
+        $order->setType("Sales");
+        
+        foreach($_POST as $post_name => $post_value){
             $inventory[] = array('key' => $post_name, 'value' => $post_value);
         }
+        
         $outcome = array();
         $totalSum = 0;
         $okToProcess = 0;        
@@ -97,13 +102,22 @@ class Sales extends Application
                 $outcome[] = array('line' => "Not enough stocks to process the order: " . $record->name . "</br>");
             }else if($okToProcess == 1){
                 $outcome[] = array('line' => "You ordered " . $okToProcess . ' ' . $record->name . " at " . $this->toDollars($record->price) . " per unit." . "</br>");
+                $order->addItem($record->id, $okToProcess);
             }else if($okToProcess > 1){
                 $outcome[] = array('line' => "You ordered " . $okToProcess . ' ' . $record->name . "s at " . $this->toDollars($record->price) . " per unit." . "</br>");
+                $order->addItem($record->id, $okToProcess);   
             }                        
             if($okToProcess > 0){
                 $totalSum += $record->price * $okToProcess;    
             }            
         }
+
+        //Save to xml
+        $order->saveOrder();
+
+        //Receipt
+        //$this->data['receipt'] = $this->parsedown->parse($order->generateReceipt());
+
         $outcome[] = array('line' => "<br><strong>Grand Total:</strong> " . $this->toDollars($totalSum));
         $this->data['result'] = $outcome;
         $this->render();
