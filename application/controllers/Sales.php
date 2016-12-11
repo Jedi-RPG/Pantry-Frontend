@@ -9,7 +9,7 @@ class Sales extends Application
         function __construct()
 	{
 		parent::__construct();
-                $this->load->model('Order');
+        $this->load->model('Order');
 	}
 
 	/**
@@ -21,7 +21,7 @@ class Sales extends Application
 		$this->data['pagebody'] = 'sale_list';
         //create table with list of products
 		$this->create_form('Products');
-                $this->data['summary'] = "<a href ='/sales/summary'>Summary</a>";
+        $this->data['summary'] = "<a href ='/sales/summary'>Summary</a>";
 		$this->render();
 	}
 

@@ -9,7 +9,7 @@ class Receiving extends Application
 	function __construct()
 	{
 		parent::__construct();
-                $this->load->model("Order");
+        $this->load->model("Order");
 	}
 	
 	
@@ -22,7 +22,7 @@ class Receiving extends Application
 
 		// this is the view we want shown
 		$this->data['pagebody'] = 'receiving_list';
-                $this->data['summary'] = "<a href ='/receiving/summary'>Summary</a>";
+        $this->data['summary'] = "<a href ='/receiving/summary'>Summary</a>";
 
 		// build the list of authors, to pass on to our view
 		$source = $this->Materials->all();
@@ -84,9 +84,9 @@ class Receiving extends Application
 	
 		$items[] = array('Ordered Items', '# Ordered Cases');
 		
-                //XML
-                $order = new Order();
-                $order->setType("Receiving");
+        //XML
+        $order = new Order();
+        $order->setType("Receiving");
                 
 		$i = 1;
 		$j = 1;
@@ -101,8 +101,8 @@ class Receiving extends Application
 
 				$j++;
                                 
-                                //XML
-                                $order->addItem($post_id, $cases);
+                //XML
+                $order->addItem($post_id, $cases);
 			}
 			$i++;
                 }
@@ -113,8 +113,8 @@ class Receiving extends Application
 			$this->data['Materials_table'] = $this->table->generate($items);
 		}
 
-                //XML
-                $order->saveOrder();
+        //XML
+        $order->saveOrder();
 		$this->render();
 
     }

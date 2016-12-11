@@ -9,7 +9,7 @@ class Production extends Application
 	function __construct()
 	{
 		parent::__construct();
-                $this->load->model("Order");
+        $this->load->model("Order");
 	}
 
 	/**
