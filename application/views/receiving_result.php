@@ -6,7 +6,9 @@
     <div id="body">
         <div id="listTable" class ="row">
 			{Materials_table}
-			
+			{result}
+            {line}
+            {/result}
 		</div>
         <hr>
         {previous}
