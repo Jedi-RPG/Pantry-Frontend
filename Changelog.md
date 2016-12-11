@@ -3,6 +3,9 @@
 ============================================
 Members: Matthew, Dennis, Injo, Haram, Lydia
 
+2016-12-10 21:39 - Lydia
+- Edited production controller Craft method, update product stock number after crafting.
+
 2016-12-10 20:20 - Haram
 - Edited methods in Dashboard controller to take in values from backend and database for product, material, and recipe.
 - Took out methods that wasn't using to clean out the code for material model and dashboard controller.

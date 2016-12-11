@@ -114,11 +114,9 @@ class Production extends Application
             if($numberCrafted == 0) {
                 $result = "Unable to craft " . $record_product->name . ", not enough materials.";                    
             }else{
-                //foreach ($record['materials'] as $material)
-                //{
-                //   $temp = $this->Materials->getMaterialWithName($material['name']);
-                //   $this->Transactions->setRecipes($temp['id'], (Int)($material['amount'] * $numberCrafted));
-                //}
+                $newStock = $record_product->stock;
+                $record_product->stock = $newStock + $numberCrafted;
+                $this->Products->update($record_product);
                 $result = "Crafted " . $numberCrafted . " " . $record_product->name . ".<br>";
             }
             
