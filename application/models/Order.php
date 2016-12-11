@@ -41,7 +41,7 @@ class Order extends CI_Model{
     
     //Fills up order data with an XML file
     public function loadXML($filename) {
-        $xml = simplexml_load_file('../data/order/' . $filename);
+        $xml = simplexml_load_file($filename);
         $this->number = (int) $xml->number;
         $this->datetime = (string) $xml->datetime;
         $this->type = (string) $xml->type;
@@ -59,15 +59,31 @@ class Order extends CI_Model{
         $result = $this->data['pagetitle'] . '  ' . PHP_EOL;
         //$result .= date(DATE_ATOM) . PHP_EOL;
         $result .= $this->datetime . PHP_EOL . PHP_EOL;
-        $result .= 'Order Number: ' . $this->number . PHP_EOL . PHP_EOL;
-        $result .= 'Type: ' . $this->type . PHP_EOL;
-        $result .= PHP_EOL . 'Your Order:'. PHP_EOL . PHP_EOL;
+        $result .= 'Type: ' . $this->type . PHP_EOL . PHP_EOL;
+        $result .= $this->type . ' Number: ' . $this->number . PHP_EOL;
+        $result .= PHP_EOL . 'Items:'. PHP_EOL . PHP_EOL;
         foreach($this->items as $key => $value) {
-            $product = $this->Products->get($key);
-            $result .= '- ' . $value . ' ' . $product->name . " at $" . number_format($product->price, 2) . " per unit.". PHP_EOL;
+            
+            if($this->type == "Receiving") {
+                $product = $this->Materials->get($key);
+            }else{
+                $product = $this->Products->get($key);
+            }
+            
+            if($this->type == "Sales") {
+                $result .= '- ' . $value . ' ' . $product->name . " at $" . number_format($product->price, 2) . " per unit.". PHP_EOL;
+            }elseif($this->type == "Receiving"){
+                $result .= '- ' . $value . ' case of ' . $product->name . PHP_EOL;
+            }else{
+                $result .= '- ' . $value . ' ' . $product->name . PHP_EOL;
+            }
             $total += $value * $product->price;
         }
-        $result .= PHP_EOL . 'Grand Total: $' . number_format($total, 2) . PHP_EOL;
+        
+        if($this->type == "Sales") {
+            $result .= PHP_EOL . 'Grand Total: $' . number_format($total, 2) . PHP_EOL;
+        }
+        
         return $result;
     }
     

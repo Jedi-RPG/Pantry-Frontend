@@ -1,6 +1,6 @@
 <div id="content">
     <div id="title">
-        <h1>Production</h1>
+        <h1>Production - {summary}</h1>
     </div>
 
     <div id="body">

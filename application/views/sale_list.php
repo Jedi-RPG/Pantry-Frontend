@@ -1,6 +1,7 @@
 <div id="content">
     <div id="title">
-        <h1>Sales</h1>
+        <h1>Sales - {summary}</h1>
+               
     </div>
 
     <div id="body">

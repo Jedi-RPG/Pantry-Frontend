@@ -1,6 +1,6 @@
 <div id="content">
     <div id="title">
-        <h1>Receiving</h1>
+        <h1>Receiving - {summary}</h1>
     </div>
 
     <div id="body">
