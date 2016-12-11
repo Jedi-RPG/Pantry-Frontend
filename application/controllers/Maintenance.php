@@ -57,7 +57,7 @@ class Maintenance extends Application
         // Add new items
         $items[] = array('');
         $items[] = array('<a href="/maintenance/add/' . $type . 
-            '" role="button" class="Submit">Create new '. lcfirst($type) .'</a>','', '');
+            '" role="button" class="submit">Create new '. lcfirst($type) .'</a>','', '');
 
         //Generate the recipes table
         $this->data[$type . '_table'] = $this->table->generate($items);
@@ -106,7 +106,7 @@ class Maintenance extends Application
         }
 
         if ($id != 0) {
-            $items[] = array('<a href="/maintenance/delete/' . $type . "/" . $id .'" role="button" class="Submit">Delete</a>',
+            $items[] = array('<a href="/maintenance/delete/' . $type . "/" . $id .'" role="button" class="submit">Delete</a>',
                              form_submit('', 'Submit', "class='submit'"), 
                              '' ,
                               '');

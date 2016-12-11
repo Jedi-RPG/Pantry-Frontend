@@ -2,6 +2,12 @@
 
 ============================================
 Members: Matthew, Dennis, Injo, Haram, Lydia
+
+2016-12-10 19:16 - Dennis
+- Bugfix: warning in maintenance edit triggers duplicate id warning in subsequent submissions
+- Bugfix: Maintenance URL stays at post url after a post, causing problems for the previous button
+- Styled new maintenance buttons 
+
 2016-12-10 17:48 - Injo
 - sales controller updates the value to the db accordingly
 - production controller updates the value to the db accordingly
