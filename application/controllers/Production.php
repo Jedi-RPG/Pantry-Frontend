@@ -220,6 +220,7 @@ class Production extends Application
         $this->load->helper('directory');
         $candidates = directory_map(PROD_ORDER_DIR);
         $parms = array();
+        sort($candidates, SORT_NUMERIC);
         foreach ($candidates as $filename) {
            // restore that order object
            $order = new Order();

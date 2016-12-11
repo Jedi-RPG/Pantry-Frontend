@@ -3,7 +3,10 @@
 ============================================
 Members: Matthew, Dennis, Injo, Haram, Lydia
 
-2016-12-11 12:1 - Dennis
+2016-12-11 13:24 - Dennis
+- Bugfix: sorted xml file array correctly
+
+2016-12-11 12:12 - Dennis
 - Updated Dashboard to use order receipts to do calculations
 - Updated controllers to check user roles and redirect to dashboard if role is incorrect
 

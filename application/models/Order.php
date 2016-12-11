@@ -122,7 +122,8 @@ class Order extends CI_Model{
     public function getOrderNumber(){
 
         $files = scandir(ORDER_DIR . '/' . $this->type, 1);
-        $current_number = substr($files[0], 0, -4);
+        sort($files, SORT_NUMERIC);
+        $current_number = substr($files[count($files)-1], 0, -4);
         return $current_number + 1;
     }
 }
