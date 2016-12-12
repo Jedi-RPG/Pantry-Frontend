@@ -6,3 +6,4 @@
 !*/cache/.htaccess
 /nbproject/private/
 .idea/
+application/config/database.php
